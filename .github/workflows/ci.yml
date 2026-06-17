@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ Agro_Gui, main ]
+    branches: [Agro_Gui, main]
   pull_request:
-    branches: [ Agro_Gui, main ]
+    branches: [Agro_Gui, main]
 
 jobs:
   build-and-test:
-    runs-on: windows-latest   # 04_agro.GUI targets net8.0-windows, so the full solution needs Windows
+    runs-on: windows-latest # 04_agro.GUI targets net8.0-windows, so the full solution needs Windows
     defaults:
       run:
-        working-directory: agrobiznes   # the .sln lives here, not at repo root
+        working-directory: agrobiznes # the .sln lives here, not at repo root
 
     steps:
       - uses: actions/checkout@v4
@@ -29,3 +29,6 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
+
+      - name: Format check
+        run: dotnet format --verify-no-changes
