@@ -16,19 +16,22 @@ namespace _01_agro.Core
     /// Abstrakcyjna klasa Rośliny, która poprzez interfejsy jest odświeżana, klonowalna i porównywalna z inną rośliną
     /// jej atrybuty zmieniaja się z każdym odświeżeniem w zależności od rodzaju rośliny (naslonecznienie, nawodnienie, wzrost)
     /// </summary>
-    public abstract class Rosliny : ITickable, ICloneable, IComparable<Rosliny>
+    
+    public abstract class Rosliny : ITickable, ICloneable, IComparable<Rosliny>, IPositioned
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        
-
         [Required]
-        public string Nazwa { get; set; }
-        public TypRosliny Typ { get; set; } 
 
-        
+       
+        public string Nazwa { get; set; }
+        public TypRosliny Typ { get; set; }
+
+        public int Row { get; set; } = -1;
+        public int Col { get; set; } = -1;
+
         private float _cena;
         public float Cena
         {

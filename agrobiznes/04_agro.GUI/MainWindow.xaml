@@ -3,47 +3,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:_04_agro.GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="495" Width="978">
-    <Grid Background="#1E1E1E"
-      Margin="10"
-      TextElement.Foreground="White">
+        Title="Agrobiznes" Height="650" Width="1100">
 
-        <!-- ZASOBY – style wspólne -->
+    <Grid Background="#1E1E1E" Margin="10" TextElement.Foreground="White">
         <Grid.Resources>
-
-            <!-- Domyślny styl tekstu (TextBlock) -->
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="13"/>
             </Style>
-
-            <!-- Domyślny styl etykiet (Label) -->
             <Style TargetType="Label">
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="13"/>
             </Style>
-
-            <!-- Styl nagłówków -->
             <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="18"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
                 <Setter Property="Margin" Value="0,0,0,10"/>
             </Style>
-
-            <!-- Styl paneli (karty) -->
             <Style x:Key="CardBorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="10"/>
                 <Setter Property="Background" Value="#2D2D30"/>
                 <Setter Property="Padding" Value="12"/>
                 <Setter Property="Margin" Value="6"/>
             </Style>
-
-            <!-- Styl przycisków -->
             <Style TargetType="Button">
-                <Setter Property="Height" Value="36"/>
+                <Setter Property="Height" Value="34"/>
                 <Setter Property="Margin" Value="0,6,0,0"/>
                 <Setter Property="Background" Value="#3E3E42"/>
                 <Setter Property="Foreground" Value="White"/>
@@ -52,144 +38,225 @@
                 <Setter Property="Padding" Value="12,6"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Style>
-
-            <!-- Styl ProgressBar -->
+            <Style TargetType="TextBox">
+                <Setter Property="Height" Value="28"/>
+                <Setter Property="Margin" Value="0,4,0,0"/>
+                <Setter Property="Background" Value="#1E1E1E"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#5A5A5A"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="8,3"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Height" Value="28"/>
+                <Setter Property="Margin" Value="0,4,0,0"/>
+                <Setter Property="Background" Value="#1E1E1E"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#5A5A5A"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Style>
             <Style TargetType="ProgressBar">
                 <Setter Property="Height" Value="18"/>
                 <Setter Property="Margin" Value="0,4,0,0"/>
             </Style>
-
-            <!-- Styl logów (ListBox) -->
             <Style TargetType="ListBox">
                 <Setter Property="Background" Value="#1E1E1E"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="BorderBrush" Value="#5A5A5A"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Style>
-
-            <!-- Styl elementów listy (ListBoxItem) -->
-            <Style TargetType="ListBoxItem">
-                <Setter Property="Foreground" Value="White"/>
-            </Style>
-
-            <!-- Styl pól tekstowych (jeśli dodasz sklep/ilość) -->
-            <Style TargetType="TextBox">
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Background" Value="#1E1E1E"/>
-                <Setter Property="BorderBrush" Value="#5A5A5A"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Padding" Value="6,2"/>
-            </Style>
-
-            <!-- Styl ComboBox (jeśli dodasz wybór rośliny) -->
-            <Style TargetType="ComboBox">
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Background" Value="#1E1E1E"/>
-                <Setter Property="BorderBrush" Value="#5A5A5A"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Padding" Value="6,2"/>
-                <Setter Property="Margin" Value="0,6,0,0"/>
-            </Style>
-
         </Grid.Resources>
 
-        <!-- PODZIAŁ OKNA -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2.3*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ================= FARMA ================= -->
-        <Border Grid.Column="0"
-        CornerRadius="10"
-        Background="#252526"
-        Padding="12"
-        Margin="6">
-
+        <!-- ====== FARM GRID ====== -->
+        <Border Grid.Column="0" CornerRadius="10" Background="#252526" Padding="12" Margin="6">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Nagłówek -->
-                <TextBlock Text="FARMA – siatka pól uprawnych"
-                   Style="{StaticResource HeaderTextStyle}"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="FARMA – siatka pól (kliknij pole)" Style="{StaticResource HeaderTextStyle}" Margin="0,0,10,0"/>
+                    <Button Content="Tick (ręczny)" Click="ManualTick_Click" Height="30" Margin="0,0,6,0"/>
+                    <Button Content="Nowa gra" Click="NewGame_Click" Height="30"/>
+                </StackPanel>
 
-                <!-- SIATKA PÓL -->
-                <Border Grid.Row="1"
-                CornerRadius="10"
-                Background="#1E1E1E"
-                Padding="10">
-
-                    <!-- Siatka 10x10 pól -->
-                    <UniformGrid x:Name="FarmGrid"
-                         Rows="10"
-                         Columns="10"/>
+                <Border Grid.Row="1" CornerRadius="10" Background="#1E1E1E" Padding="10">
+                    <UniformGrid x:Name="FarmGrid" Rows="10" Columns="10"/>
                 </Border>
             </Grid>
         </Border>
 
-        <!-- ================= PANELE ================= -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <!-- ====== RIGHT PANEL: TABS ====== -->
+        <Border Grid.Column="1" CornerRadius="10" Background="#252526" Padding="10" Margin="6">
+            <TabControl Background="#252526" BorderBrush="#5A5A5A">
 
-            <!-- PANEL STATYSTYK -->
-            <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}">
-                <StackPanel>
-                    <TextBlock Text="Statystyki" Style="{StaticResource HeaderTextStyle}"/>
+                <!-- DASHBOARD -->
+                <TabItem Header="Panel">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Panel" Style="{StaticResource HeaderTextStyle}"/>
 
-                    <TextBlock Text="Średni wzrost roślin"/>
-                    <ProgressBar x:Name="GrowthBar" Value="0"/>
+                            <TextBlock x:Name="TickText" Text="Tura: 0" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8"/>
 
-                    <TextBlock Text="Średnie nawodnienie" Margin="0,10,0,0"/>
-                    <ProgressBar x:Name="WaterBar" Value="0"/>
-                </StackPanel>
-            </Border>
+                            <TextBlock Text="Stan konta"/>
+                            <TextBlock x:Name="BalanceText" Text="Stan konta: 0 PLN" Foreground="LightGreen"
+                                       FontSize="16" FontWeight="SemiBold" Margin="0,2,0,8"/>
 
-            <!-- PANEL EKONOMII -->
-            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
-                <StackPanel>
-                    <TextBlock Text="Ekonomia" Style="{StaticResource HeaderTextStyle}"/>
+                            <TextBlock Text="Średni wzrost roślin"/>
+                            <ProgressBar x:Name="GrowthBar" Minimum="0" Maximum="100" Value="0"/>
 
-                    <TextBlock x:Name="BalanceText"
-                        Text="Stan konta: 1000 zł"
-                        Foreground="LightGreen"
-                        FontSize="16"
-                        FontWeight="SemiBold"/>
+                            <TextBlock Text="Średnie nawodnienie roślin" Margin="0,10,0,0"/>
+                            <ProgressBar x:Name="WaterBar" Minimum="0" Maximum="100" Value="0"/>
 
+                            <Separator Margin="0,10,0,10"/>
 
-                    <Button Content="Kup"
-                           Click="Buy_Click"/>
+                            <TextBlock Text="Gleba / UV (z FarmState)"/>
+                            <TextBlock x:Name="SoilText" Text="SoilMoisture: 0" Margin="0,2,0,0"/>
+                            <TextBlock x:Name="LightText" Text="LightLevel: 0" Margin="0,2,0,0"/>
 
-                    <Button Content="Sprzedaj"
-                           Click="Sell_Click"/>
+                            <Separator Margin="0,10,0,10"/>
 
-                </StackPanel>
-            </Border>
+                            <TextBlock Text="Szybkie akcje na polu"/>
+                            <UniformGrid Rows="1" Columns="3" Margin="0,6,0,0">
+                                <Button Content="Kup+Posadź Tomato" Click="BuyTomato_Click" Margin="0,0,6,0"/>
+                                <Button Content="Kup+Posadź Rose" Click="BuyRose_Click" Margin="0,0,6,0"/>
+                                <Button Content="Kup+Posadź Cactus" Click="BuyCactus_Click"/>
+                            </UniformGrid>
 
-            <!-- PANEL LOGÓW -->
-            <Border Grid.Row="2" Style="{StaticResource CardBorderStyle}">
-                <StackPanel>
-                    <TextBlock Text="Logi systemowe"
-                   Style="{StaticResource HeaderTextStyle}"/>
+                            <Button Content="Sprzedaj (z pola)" Click="Sell_Click" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
 
-                    <!-- Lista logów systemowych -->
-                    <ListBox x:Name="LogList"
-                 MinHeight="200">
-                        <ListBoxItem Content="[INFO] System uruchomiony"/>
-                        <ListBoxItem Content="[INFO] Oczekiwanie na akcję użytkownika"/>
-                    </ListBox>
-                </StackPanel>
-            </Border>
+                <!-- SHOP / INVENTORY (uses KupPomidory/Jablka/Kaktusy/Róże + Clone + CompareTo) -->
+                <TabItem Header="Sklep i Magazyn">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Sklep (kupno do magazynu)" Style="{StaticResource HeaderTextStyle}"/>
 
+                            <TextBlock Text="Ilość:"/>
+                            <TextBox x:Name="QtyBox" Text="1"/>
 
-        </Grid>
+                            <UniformGrid Rows="2" Columns="2" Margin="0,8,0,0">
+                                <Button Content="Kup Pomidory (magazyn)" Click="BuyTomatoesStock_Click" Margin="0,0,6,6"/>
+                                <Button Content="Kup Jabłka (magazyn)" Click="BuyApplesStock_Click" Margin="0,0,0,6"/>
+                                <Button Content="Kup Kaktusy (magazyn)" Click="BuyCactusesStock_Click" Margin="0,0,6,0"/>
+                                <Button Content="Kup Róże (magazyn)" Click="BuyRosesStock_Click"/>
+                            </UniformGrid>
 
+                            <Button Content="Sprzedaj wszystko dojrzałe (SprzedajWszystko)" Click="SellAll_Click" Margin="0,10,0,0"/>
+
+                            <Separator Margin="0,12,0,10"/>
+
+                            <TextBlock Text="Magazyn roślin (Row = -1, Col = -1)" FontWeight="SemiBold"/>
+                            <ListBox x:Name="InventoryList" MinHeight="220" Margin="0,6,0,0"/>
+
+                            <UniformGrid Rows="1" Columns="3" Margin="0,8,0,0">
+                                <Button Content="Sortuj po nawodnieniu" Click="SortInventory_Click" Margin="0,0,6,0"/>
+                                <Button Content="Klonuj (Clone)" Click="CloneSelected_Click" Margin="0,0,6,0"/>
+                                <Button Content="Posadź na wybrane pole" Click="PlantFromInventory_Click"/>
+                            </UniformGrid>
+
+                            <TextBlock Text="(Kliknij pole na farmie, wybierz roślinę z magazynu i posadź)" Margin="0,8,0,0" Opacity="0.8"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- DEVICES (uses KupZraszacz/KupPanelSloneczny + toggles + Sensor threshold) -->
+                <TabItem Header="Urządzenia">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Urządzenia" Style="{StaticResource HeaderTextStyle}"/>
+
+                            <UniformGrid Rows="1" Columns="2" Margin="0,6,0,0">
+                                <Button Content="Kup zraszacz (KupZraszacz)" Click="BuySprinkler_Click" Margin="0,0,6,0"/>
+                                <Button Content="Kup lampę UV (KupPanelSloneczny)" Click="BuySolar_Click"/>
+                            </UniformGrid>
+
+                            <Separator Margin="0,12,0,10"/>
+
+                            <TextBlock Text="Zraszacze" FontWeight="SemiBold"/>
+                            <ListBox x:Name="SprinklersList" MinHeight="120" Margin="0,6,0,0"/>
+
+                            <TextBlock Text="Lampy UV" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                            <ListBox x:Name="SolarsList" MinHeight="120" Margin="0,6,0,0"/>
+
+                            <Separator Margin="0,12,0,10"/>
+
+                            <TextBlock Text="Sensor: próg alarmu (CriticalThreshold)" FontWeight="SemiBold"/>
+                            <TextBox x:Name="SensorThresholdBox" Text="20" />
+                            <Button Content="Zastosuj próg dla Sensor" Click="ApplySensorThreshold_Click"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- FINANCE (Transactions + Report + Tax) -->
+                <TabItem Header="Finanse">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="8">
+                            <TextBlock Text="Finanse" Style="{StaticResource HeaderTextStyle}"/>
+
+                            <TextBlock Text="Podatek (Tax)"/>
+                            <ComboBox x:Name="TaxCombo" SelectionChanged="TaxCombo_SelectionChanged">
+                                <ComboBoxItem Content="NoTax" IsSelected="True"/>
+                                <ComboBoxItem Content="FlatTax 19%"/>
+                            </ComboBox>
+
+                            <Separator Margin="0,10,0,10"/>
+
+                            <TextBlock Text="Raport (GetReport)" FontWeight="SemiBold"/>
+                            <TextBlock Text="Od (UTC, yyyy-MM-dd)" Opacity="0.85"/>
+                            <TextBox x:Name="ReportFromBox" Text="2026-01-01"/>
+                            <TextBlock Text="Do (UTC, yyyy-MM-dd)" Opacity="0.85" Margin="0,8,0,0"/>
+                            <TextBox x:Name="ReportToBox" Text="2026-12-31"/>
+                            <Button Content="Generuj raport" Click="GenerateReport_Click"/>
+
+                            <TextBlock x:Name="ReportText" Text="" Margin="0,10,0,0" TextWrapping="Wrap"/>
+
+                            <Separator Margin="0,12,0,10"/>
+
+                            <TextBlock Text="Transakcje (FinanceEngine.Transactions)" FontWeight="SemiBold"/>
+                            <DataGrid x:Name="TransactionsGrid"
+                                      AutoGenerateColumns="False"
+                                      MinHeight="260"
+                                      Margin="0,6,0,0"
+                                      Background="#1E1E1E"
+                                      Foreground="White"
+                                      BorderBrush="#5A5A5A"
+                                      HeadersVisibility="Column">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Czas" Binding="{Binding OccurredAt}" Width="*"/>
+                                    <DataGridTextColumn Header="Typ" Binding="{Binding Type}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Kategoria" Binding="{Binding Category}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Kwota" Binding="{Binding Amount}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Opis" Binding="{Binding Description}" Width="2*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <!-- LOGS -->
+                <TabItem Header="Logi">
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Logi zdarzeń (w tym alarmy sensora i FINANSE)" Style="{StaticResource HeaderTextStyle}"/>
+                        <ListBox x:Name="LogList" Grid.Row="1"/>
+                    </Grid>
+                </TabItem>
+
+            </TabControl>
+        </Border>
     </Grid>
-
 </Window>

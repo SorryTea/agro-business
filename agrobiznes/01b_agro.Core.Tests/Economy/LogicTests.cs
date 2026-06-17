@@ -13,7 +13,7 @@ public class LogicTests
     {
         var engine = new SimulationEngine();
 
-        
+
         if (engine.State.Sprinklers.Count == 0)
             engine.State.Sprinklers.Add(new Sprinkler { IsOn = true });
         else
@@ -24,11 +24,10 @@ public class LogicTests
         else
             foreach (var l in engine.State.Solars) l.IsOn = true;
 
-       
+
         TestContext.WriteLine($"Sprinklers: {engine.State.Sprinklers.Count}, ON: {engine.State.Sprinklers.Count(s => s.IsOn)}");
         TestContext.WriteLine($"Solars: {engine.State.Solars.Count}, ON: {engine.State.Solars.Count(l => l.IsOn)}");
 
-        
         engine.State.CurrentTick = 29;
 
         var before = engine.State.Finance.Account.Balance.Amount;
@@ -40,6 +39,6 @@ public class LogicTests
         TestContext.WriteLine($"Tick after: {engine.State.CurrentTick}");
         TestContext.WriteLine($"Before: {before}, After: {after}");
 
-        Assert.IsTrue(after < before, "Saldo powinno spaść po rozliczeniu kosztów na ticku 30.");
+        Assert.IsLessThan(before, after, "Saldo powinno spaść po rozliczeniu kosztów na ticku 30.");
     }
 }

@@ -44,6 +44,11 @@ namespace _03_agro.Logic
                 return false;
             }
         }
+        public bool TryBuyPlant(float cost, string plantName, out string message)
+        {
+            return TryPay(cost, TransactionCategory.Other, $"Zakup rośliny: {plantName}", out message);
+        }
+
 
         // ==========================================
         // 1. KUPOWANIE (PROSTE)
@@ -54,7 +59,7 @@ namespace _03_agro.Logic
         {
             // Tworzymy "prototyp", żeby sprawdzić aktualną cenę w tym sezonie
             var wzorzec = new Tomato();
-            float koszt = wzorzec.Cena * ilosc; // "Cena" to Twoja cena zakupu z klasy Roslina
+            float koszt = wzorzec.Cena * ilosc; 
 
             // [MIEJSCE NA IF FINANSOWY] 
            if (!TryPay(koszt, TransactionCategory.Seeds, $"Zakup: Pomidory x{ilosc}", out var err))
@@ -188,6 +193,59 @@ namespace _03_agro.Logic
 
             return "SKUP: Magazyn pusty (brak dojrzałych roślin).";
         }
+        public bool TrySellAt(int row, int col, out string message)
+        {
+            // 1) Szukamy rośliny na pozycji (row,col) w konkretnych listach
+            Tomato tomato = _state.Tomatoes.FirstOrDefault(p => p.Row == row && p.Col == col);
+            if (tomato != null)
+                return SellSpecific(_state.Tomatoes, tomato, row, col, out message);
+
+            Apple apple = _state.Apples.FirstOrDefault(p => p.Row == row && p.Col == col);
+            if (apple != null)
+                return SellSpecific(_state.Apples, apple, row, col, out message);
+
+            Cactus cactus = _state.Cactile.FirstOrDefault(p => p.Row == row && p.Col == col);
+            if (cactus != null)
+                return SellSpecific(_state.Cactile, cactus, row, col, out message);
+
+            Rose rose = _state.Roses.FirstOrDefault(p => p.Row == row && p.Col == col);
+            if (rose != null)
+                return SellSpecific(_state.Roses, rose, row, col, out message);
+
+            message = $"SKUP: Pole ({row},{col}) jest puste.";
+            return false;
+        }
+
+        private bool SellSpecific<T>(List<T> list, T plant, int row, int col, out string message)
+            where T : Rosliny
+        {
+            // 2) (Opcjonalnie) sprzedajemy tylko dojrzałe i nie martwe
+            if (!plant.IsMature || plant.IsDead)
+            {
+                message = $"SKUP: Roślina na ({row},{col}) nie jest gotowa do sprzedaży.";
+                return false;
+            }
+
+            // 3) Zarobek
+            float income = plant.CenaSprzedazy;
+
+            // 4) Usuwamy z listy
+            list.Remove(plant);
+
+            // 5) Wpłata na konto
+            var revenueMoney = new Money((decimal)income, "PLN");
+            _state.Finance.Apply(new SaleTransaction(
+                revenueMoney,
+                TransactionCategory.Sales,
+                $"Sprzedaż rośliny na polu ({row},{col})"
+            ));
+
+            message = $"SKUP: Sprzedano roślinę z pola ({row},{col}) za {income:C}.";
+            _logger.AddLog(message);
+            return true;
+        }
+
+
 
         // ==========================================
         // 3. SILNIK SPRZEDAŻY (GENERYCZNY)
