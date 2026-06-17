@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +11,9 @@ namespace _01_agro.Core
     /// </summary>
     public class Rose : Rosliny, IPositioned
     {
-        
-        public Rose():base("Róża",TypRosliny.Kwiat) {
+
+        public Rose() : base("Róża", TypRosliny.Kwiat)
+        {
             Cena = 100;
             CenaSprzedazy = 123;
             PoziomNawodnienia = 50;

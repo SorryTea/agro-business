@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,13 +40,13 @@ namespace _02_agro.Data
 
                 return state;
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 File.Delete(FilePath);
                 System.Diagnostics.Debug.WriteLine($"[BŁĄD ZAPISU]: Nie udało się wczytać gry. {ex.Message}");
                 return null;
             }
-            
+
         }
     }
 }

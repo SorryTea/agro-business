@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using _02_agro.Data;
 
 namespace _02b_agro.Data.Tests
@@ -23,7 +23,10 @@ namespace _02b_agro.Data.Tests
             {
                 Console.WriteLine("BŁĄD: Nie udało się połączyć z bazą.");
                 Console.WriteLine(ex.Message);
-                if (ex.InnerException != null) Console.WriteLine(ex.InnerException.Message);
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine(ex.InnerException.Message);
+                }
             }
 
             Console.ReadKey();

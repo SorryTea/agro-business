@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +23,6 @@ namespace _01_agro.Core.Economy
         public Money Profit { get; set; }
 
 
-        
+
     }
 }

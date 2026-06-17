@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ namespace _01_agro.Core
     /// <summary>
     /// Klasa Sprinkler dziedzicząca po klasie Device odpowiada za nawodnienie roślinek
     /// </summary>
-    public class Sprinkler: Device
+    public class Sprinkler : Device
     {
         public Sprinkler()
         {
@@ -26,7 +26,10 @@ namespace _01_agro.Core
                 state.SoilMoisture += 5.0;
 
                 // 2. Zabezpiecz, żeby nie utopić farmy (max 100%)
-                if (state.SoilMoisture > 100) state.SoilMoisture = 100;
+                if (state.SoilMoisture > 100)
+                {
+                    state.SoilMoisture = 100;
+                }
 
                 // 3. Pobierz opłatę za wodę/prąd
 
@@ -43,7 +46,7 @@ namespace _01_agro.Core
                 );*/
 
             }
-            
+
         }
     }
 }

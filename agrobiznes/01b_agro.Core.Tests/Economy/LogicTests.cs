@@ -1,4 +1,4 @@
-﻿using _01_agro.Core;
+using _01_agro.Core;
 using _03_agro.Logic;
 
 namespace _01b_agro.Core.Tests;
@@ -15,15 +15,28 @@ public class LogicTests
 
 
         if (engine.State.Sprinklers.Count == 0)
+        {
             engine.State.Sprinklers.Add(new Sprinkler { IsOn = true });
+        }
         else
-            foreach (var s in engine.State.Sprinklers) s.IsOn = true;
+        {
+            foreach (var s in engine.State.Sprinklers)
+            {
+                s.IsOn = true;
+            }
+        }
 
         if (engine.State.Solars.Count == 0)
+        {
             engine.State.Solars.Add(new Solar { IsOn = true });
+        }
         else
-            foreach (var l in engine.State.Solars) l.IsOn = true;
-
+        {
+            foreach (var l in engine.State.Solars)
+            {
+                l.IsOn = true;
+            }
+        }
 
         TestContext.WriteLine($"Sprinklers: {engine.State.Sprinklers.Count}, ON: {engine.State.Sprinklers.Count(s => s.IsOn)}");
         TestContext.WriteLine($"Solars: {engine.State.Solars.Count}, ON: {engine.State.Solars.Count(l => l.IsOn)}");

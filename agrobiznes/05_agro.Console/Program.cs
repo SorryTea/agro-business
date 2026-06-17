@@ -1,5 +1,5 @@
-﻿using System;
-using _03_agro.Logic; 
+using System;
+using _03_agro.Logic;
 
 class Program
 {

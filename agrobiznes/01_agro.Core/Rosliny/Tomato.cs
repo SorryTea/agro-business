@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace _01_agro.Core
     /// </summary>
     public class Tomato : Rosliny, IPositioned
     {
-        
+
 
         public Tomato() : base("Pomidor", TypRosliny.Warzywo)
         {

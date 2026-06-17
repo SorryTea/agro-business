@@ -1,4 +1,4 @@
-﻿using _01_agro.Core.Economy;
+using _01_agro.Core.Economy;
 
 namespace _01b_agro.Core.Tests;
 
@@ -22,7 +22,7 @@ public class MoneyTests
     [TestMethod]
     public void Money_Should_Throw_When_Amount_Is_Negative()
     {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Money(-1m, "PLN"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Money(-1m, "PLN"));
     }
 
     [TestMethod]
@@ -215,7 +215,7 @@ public class TaxTests
             engine.Apply(new PurchaseTransaction(new Money(30m), TransactionCategory.Energy, "Prąd"));
 
             Assert.AreEqual(70m, engine.Account.Balance.Amount);
-            Assert.AreEqual(1, engine.Transactions.Count);
+            Assert.HasCount(1, engine.Transactions);
         }
 
         [TestMethod]

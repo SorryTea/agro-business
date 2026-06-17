@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +32,9 @@ namespace _01_agro.Core.Economy
         public void Apply(Transaction transaction)
         {
             if (transaction is null)
+            {
                 throw new ArgumentNullException(nameof(transaction));
+            }
 
             transaction.Apply(Account);
             _transactions.Add(transaction);
@@ -44,7 +46,9 @@ namespace _01_agro.Core.Economy
         public FinancialReport GetReport(DateTimeOffset from, DateTimeOffset to, string? title = null)
         {
             if (to < from)
+            {
                 throw new ArgumentException("Koniec okresu nie może być wcześniejszy niż początek.");
+            }
 
             var scope = _transactions
                 .Where(t => t.OccurredAt >= from && t.OccurredAt <= to)

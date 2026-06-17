@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using _01_agro.Core;
-using _02_agro.Data;
 using _01_agro.Core.Economy;
+using _02_agro.Data;
 
 
 namespace _03_agro.Logic
@@ -59,10 +59,10 @@ namespace _03_agro.Logic
         {
             // Tworzymy "prototyp", żeby sprawdzić aktualną cenę w tym sezonie
             var wzorzec = new Tomato();
-            float koszt = wzorzec.Cena * ilosc; 
+            float koszt = wzorzec.Cena * ilosc;
 
             // [MIEJSCE NA IF FINANSOWY] 
-           if (!TryPay(koszt, TransactionCategory.Seeds, $"Zakup: Pomidory x{ilosc}", out var err))
+            if (!TryPay(koszt, TransactionCategory.Seeds, $"Zakup: Pomidory x{ilosc}", out var err))
             {
                 return err;
             }
@@ -158,14 +158,14 @@ namespace _03_agro.Logic
             float zarobekCalkowity = 0;
             int iloscCalkowita = 0;
 
-            
+
 
             var wynikPomidory = SprzedajZListy(_state.Tomatoes);
             zarobekCalkowity += wynikPomidory.zarobek;
             iloscCalkowita += wynikPomidory.ilosc;
 
             var wynikJablka = SprzedajZListy(_state.Apples);
-            zarobekCalkowity += wynikJablka.zarobek; 
+            zarobekCalkowity += wynikJablka.zarobek;
             iloscCalkowita += wynikJablka.ilosc;
 
             var wynikKaktusy = SprzedajZListy(_state.Cactile);
@@ -198,19 +198,27 @@ namespace _03_agro.Logic
             // 1) Szukamy rośliny na pozycji (row,col) w konkretnych listach
             Tomato tomato = _state.Tomatoes.FirstOrDefault(p => p.Row == row && p.Col == col);
             if (tomato != null)
+            {
                 return SellSpecific(_state.Tomatoes, tomato, row, col, out message);
+            }
 
             Apple apple = _state.Apples.FirstOrDefault(p => p.Row == row && p.Col == col);
             if (apple != null)
+            {
                 return SellSpecific(_state.Apples, apple, row, col, out message);
+            }
 
             Cactus cactus = _state.Cactile.FirstOrDefault(p => p.Row == row && p.Col == col);
             if (cactus != null)
+            {
                 return SellSpecific(_state.Cactile, cactus, row, col, out message);
+            }
 
             Rose rose = _state.Roses.FirstOrDefault(p => p.Row == row && p.Col == col);
             if (rose != null)
+            {
                 return SellSpecific(_state.Roses, rose, row, col, out message);
+            }
 
             message = $"SKUP: Pole ({row},{col}) jest puste.";
             return false;
@@ -257,7 +265,10 @@ namespace _03_agro.Logic
             // 1. Wybierz te do sprzedania
             var doSprzedania = listaRoslin.Where(r => r.IsMature && !r.IsDead).ToList();
 
-            if (doSprzedania.Count == 0) return (0, 0);
+            if (doSprzedania.Count == 0)
+            {
+                return (0, 0);
+            }
 
             // 2. Policz zysk (Suma cen sprzedaży konkretnych obiektów)
             // Dzięki temu, że cena jest w roślinie, to działa automatycznie!
@@ -286,7 +297,7 @@ namespace _03_agro.Logic
         }
 
         // --- POMOCNICZA METODA DLA MASZYN ---
-        
+
         private string KupMaszyneKonkretna<T>(T maszyna, List<T> listaDocelowa) where T : Device
         {
             float koszt = maszyna.Cena;

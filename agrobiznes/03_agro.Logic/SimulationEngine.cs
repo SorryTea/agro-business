@@ -1,10 +1,10 @@
-﻿using _01_agro.Core;
-using _01_agro.Core.Economy;
-using _02_agro.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using _01_agro.Core;
+using _01_agro.Core.Economy;
+using _02_agro.Data;
 
 namespace _03_agro.Logic
 {
@@ -47,7 +47,9 @@ namespace _03_agro.Logic
         private void ApplyOperatingCostsIfDue()
         {
             if (_state.CurrentTick % BillingIntervalTicks != 0)
+            {
                 return;
+            }
 
             int onSprinklers = _state.Sprinklers.Count(s => s.IsOn);
             int onLamps = _state.Solars.Count(l => l.IsOn);
@@ -164,7 +166,11 @@ namespace _03_agro.Logic
             // ochrona przed nakładaniem ticków
             lock (_sync)
             {
-                if (_tickInProgress) return;
+                if (_tickInProgress)
+                {
+                    return;
+                }
+
                 _tickInProgress = true;
             }
 
@@ -175,7 +181,7 @@ namespace _03_agro.Logic
                 // cały Tick + modyfikacje stanu w locku
                 lock (_sync)
                 {
-                    Tick_Internal_NoEvent(); 
+                    Tick_Internal_NoEvent();
                     snapshot = _state;
                 }
             }
@@ -194,13 +200,34 @@ namespace _03_agro.Logic
         {
             lock (_sync)
             {
-                if (obj is Tomato tomato) _state.Tomatoes.Add(tomato);
-                else if (obj is Apple apple) _state.Apples.Add(apple);
-                else if (obj is Rose rose) _state.Roses.Add(rose);
-                else if (obj is Cactus cactus) _state.Cactile.Add(cactus);
-                else if (obj is Sprinkler sprinkler) _state.Sprinklers.Add(sprinkler);
-                else if (obj is Solar solar) _state.Solars.Add(solar);
-                else if (obj is Sensor sensor) _state.Sensors.Add(sensor);
+                if (obj is Tomato tomato)
+                {
+                    _state.Tomatoes.Add(tomato);
+                }
+                else if (obj is Apple apple)
+                {
+                    _state.Apples.Add(apple);
+                }
+                else if (obj is Rose rose)
+                {
+                    _state.Roses.Add(rose);
+                }
+                else if (obj is Cactus cactus)
+                {
+                    _state.Cactile.Add(cactus);
+                }
+                else if (obj is Sprinkler sprinkler)
+                {
+                    _state.Sprinklers.Add(sprinkler);
+                }
+                else if (obj is Solar solar)
+                {
+                    _state.Solars.Add(solar);
+                }
+                else if (obj is Sensor sensor)
+                {
+                    _state.Sensors.Add(sensor);
+                }
                 else
                 {
                     _logger.AddLog($"BŁĄD: Nieznany typ obiektu: {obj.GetType().Name}");
@@ -240,8 +267,16 @@ namespace _03_agro.Logic
                         _state.Tomatoes.Add(p);
                     }
 
-                    for (int i = 0; i < 5; i++) _state.Sprinklers.Add(new Sprinkler { IsOn = false });
-                    for (int i = 0; i < 3; i++) _state.Solars.Add(new Solar { IsOn = false });
+                    for (int i = 0; i < 5; i++)
+                    {
+                        _state.Sprinklers.Add(new Sprinkler { IsOn = false });
+                    }
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        _state.Solars.Add(new Solar { IsOn = false });
+                    }
+
                     _state.Sensors.Add(new Sensor());
 
                     GameSaver.SaveGame(_state);
@@ -270,10 +305,16 @@ namespace _03_agro.Logic
 
             // gleba + UV
             _state.SoilMoisture -= 0.1 * (_state.Tomatoes.Count + _state.Roses.Count + _state.Apples.Count);
-            if (_state.SoilMoisture < 0) _state.SoilMoisture = 0;
+            if (_state.SoilMoisture < 0)
+            {
+                _state.SoilMoisture = 0;
+            }
 
             _state.LightLevel -= 1.0;
-            if (_state.LightLevel < 0) _state.LightLevel = 0;
+            if (_state.LightLevel < 0)
+            {
+                _state.LightLevel = 0;
+            }
 
             // zbieramy wszystko do jednej listy
             var allObjects = new List<ITickable>();

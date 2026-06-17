@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +10,16 @@ namespace _01_agro.Core.Economy
     /// Podatek liniowy.
     /// </summary>
 
-    public class FlatTax: ITax
+    public class FlatTax : ITax
     {
         public decimal Rate { get; }
 
         public FlatTax(decimal rate)
         {
             if (rate < 0m || rate > 1m)
+            {
                 throw new System.ArgumentOutOfRangeException(nameof(rate));
+            }
 
             Rate = rate;
         }
@@ -25,7 +27,9 @@ namespace _01_agro.Core.Economy
         public Money CalculateTax(FinancialPeriod period)
         {
             if (period.Profit.Amount <= 0m)
+            {
                 return new Money(0m, period.Profit.Currency);
+            }
 
             return new Money(period.Profit.Amount * Rate, period.Profit.Currency);
         }

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 namespace _01_agro.Core.Economy
 {
@@ -44,7 +44,7 @@ namespace _01_agro.Core.Economy
         public Money Amount { get; private set; }
         public string Description { get; }
         public TransactionCategory Category { get; private set; }
-        public abstract TransactionType Type{ get; }
+        public abstract TransactionType Type { get; }
 
         protected Transaction(Money amount, TransactionCategory category, string description, DateTimeOffset? occurredAt = null)
         {
@@ -71,9 +71,20 @@ namespace _01_agro.Core.Economy
     {
         public int Compare(Transaction? x, Transaction? y)
         {
-            if (ReferenceEquals(x, y)) return 0;
-            if (x is null) return 1;
-            if (y is null) return -1;
+            if (ReferenceEquals(x, y))
+            {
+                return 0;
+            }
+
+            if (x is null)
+            {
+                return 1;
+            }
+
+            if (y is null)
+            {
+                return -1;
+            }
 
             return y.OccurredAt.CompareTo(x.OccurredAt); // DESC
         }
@@ -86,13 +97,26 @@ namespace _01_agro.Core.Economy
     {
         public int Compare(Transaction? x, Transaction? y)
         {
-            if (ReferenceEquals(x, y)) return 0;
-            if (x is null) return 1;
-            if (y is null) return -1;
+            if (ReferenceEquals(x, y))
+            {
+                return 0;
+            }
+
+            if (x is null)
+            {
+                return 1;
+            }
+
+            if (y is null)
+            {
+                return -1;
+            }
 
             // Jeśli waluty różne, to nie porównujemy "na pałę"
             if (!string.Equals(x.Amount.Currency, y.Amount.Currency, StringComparison.Ordinal))
+            {
                 return string.Compare(x.Amount.Currency, y.Amount.Currency, StringComparison.Ordinal);
+            }
 
             return y.Amount.Amount.CompareTo(x.Amount.Amount); // DESC
         }

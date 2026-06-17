@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,18 +13,21 @@ namespace _01_agro.Core.Economy
     /// Używany w całym module ekonomii (saldo, transakcje, raporty).
     /// </summary>
     [ComplexType]
-    public class Money: IEquatable<Money>
+    public class Money : IEquatable<Money>
     {
         [JsonInclude]
         public decimal Amount { get; set; }
         [JsonInclude]
         public string Currency { get; set; }
 
-  
+
         public Money(decimal amount, string currency)
         {
             if (amount < 0m)
+            {
                 throw new System.ArgumentOutOfRangeException(nameof(amount));
+            }
+
             Amount = amount;
             Currency = currency;
         }
@@ -40,8 +43,15 @@ namespace _01_agro.Core.Economy
         // ===== IEquatable =====
         public bool Equals(Money? other)
         {
-            if (ReferenceEquals(other, null)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
 
             return Amount == other.Amount &&
                    string.Equals(Currency, other.Currency, StringComparison.Ordinal);

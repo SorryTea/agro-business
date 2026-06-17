@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization; 
+using System;
+using System.Text.Json.Serialization;
 
 namespace _01_agro.Core.Economy
 {
@@ -10,13 +10,13 @@ namespace _01_agro.Core.Economy
 
     public class Account
     {
-        
+
         [JsonInclude]
         public Money Balance { get; private set; }
 
         public event Action<Money>? BalanceChanged;
 
-        
+
         public Account(Money initialBalance)
         {
             Balance = initialBalance;
@@ -38,9 +38,11 @@ namespace _01_agro.Core.Economy
         public void Debit(Money amount)
         {
             if (amount.Amount > Balance.Amount)
+            {
                 throw new InvalidOperationException("Brak środków");
+            }
 
-                Balance = new Money(Balance.Amount - amount.Amount, Balance.Currency);
+            Balance = new Money(Balance.Amount - amount.Amount, Balance.Currency);
             BalanceChanged?.Invoke(Balance);
         }
     }
