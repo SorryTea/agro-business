@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ Agro_Gui, main ]
+  pull_request:
+    branches: [ Agro_Gui, main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest   # 04_agro.GUI targets net8.0-windows, so the full solution needs Windows
+    defaults:
+      run:
+        working-directory: agrobiznes   # the .sln lives here, not at repo root
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal
