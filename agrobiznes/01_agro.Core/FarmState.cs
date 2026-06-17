@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +17,14 @@ namespace _01_agro.Core
 
         public double LightLevel { get; set; } = 20.0;
 
-        
+
         // [NotMapped] oznacza, że nie chcemy tego zapisywać w tabeli FarmState w bazie.
         [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         // Tego nie zapisujemy do pliku, bo to kod, a nie dane!
         [JsonIgnore]
         public Action<string> Logger { get; set; }
 
-      
+
 
         // 3. Główna lista obiektów symulacji - DODAWAJ OBIEKTY
         public List<Tomato> Tomatoes { get; set; } = new List<Tomato>();

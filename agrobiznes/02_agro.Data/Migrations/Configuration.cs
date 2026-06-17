@@ -1,4 +1,4 @@
-﻿namespace _02_agro.Data.Migrations
+namespace _02_agro.Data.Migrations
 {
     using System;
     using System.Data.Entity;

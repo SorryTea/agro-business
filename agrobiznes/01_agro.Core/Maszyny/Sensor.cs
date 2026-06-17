@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +43,9 @@ namespace _01_agro.Core
 
                 // Logujemy alarm raz na jakiś czas (żeby nie spamować co sekundę)
                 if (state.CurrentTick % 5 == 0)
+                {
                     state.Logger?.Invoke($"[agro.Core] Sensor: wykryto suszę ({WaterReading:F1}%). Uruchamiam zraszacze.");
+                }
             }
             else
             {
@@ -62,7 +64,9 @@ namespace _01_agro.Core
                 }
 
                 if (state.CurrentTick % 5 == 0 && state.Solars.Count > 0)
+                {
                     state.Logger?.Invoke($"[agro.Core] Sensor: ciemno ({UVReading}%). Włączam lampy UV.");
+                }
             }
             else
             {

@@ -1,9 +1,9 @@
-﻿using _01_agro.Core.Economy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _01_agro.Core.Economy;
 
 namespace _01_agro.Core
 {
@@ -26,7 +26,10 @@ namespace _01_agro.Core
                 state.LightLevel += 5.0;
 
                 // 2. Zabezpieczenie
-                if (state.LightLevel > 100) state.LightLevel = 100;
+                if (state.LightLevel > 100)
+                {
+                    state.LightLevel = 100;
+                }
 
                 // 3. Pobierz opłatę za prąd (Tu jest problem bo placimy każdego ticka a powinniśmy raz na na miesiąc )
 

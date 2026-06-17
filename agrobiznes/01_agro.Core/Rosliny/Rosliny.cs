@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _01_agro.Core
 {
@@ -16,7 +16,7 @@ namespace _01_agro.Core
     /// Abstrakcyjna klasa Rośliny, która poprzez interfejsy jest odświeżana, klonowalna i porównywalna z inną rośliną
     /// jej atrybuty zmieniaja się z każdym odświeżeniem w zależności od rodzaju rośliny (naslonecznienie, nawodnienie, wzrost)
     /// </summary>
-    
+
     public abstract class Rosliny : ITickable, ICloneable, IComparable<Rosliny>, IPositioned
     {
         [Key]
@@ -25,7 +25,7 @@ namespace _01_agro.Core
 
         [Required]
 
-       
+
         public string Nazwa { get; set; }
         public TypRosliny Typ { get; set; }
 
@@ -38,14 +38,18 @@ namespace _01_agro.Core
             get => _cena;
             set
             {
-                if (value < 0) throw new ArgumentOutOfRangeException(nameof(Cena), "Cena nie może być ujemna.");
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(Cena), "Cena nie może być ujemna.");
+                }
+
                 _cena = value;
             }
         }
 
         public float CenaSprzedazy { get; set; }
 
-        
+
         public float PoziomWzrostu { get; set; } = 0;
         public float PoziomNawodnienia { get; set; } = 20;
         public float PoziomNaslonecznienia { get; set; } = 30;
@@ -57,7 +61,7 @@ namespace _01_agro.Core
 
         // --- KONSTRUKTORY ---
 
-        
+
         protected Rosliny(string nazwa, TypRosliny typ)
         {
             Nazwa = nazwa;
@@ -71,14 +75,20 @@ namespace _01_agro.Core
 
         public virtual void Tick(FarmState state)
         {
-            if (IsDead || IsMature) return;
+            if (IsDead || IsMature)
+            {
+                return;
+            }
 
             // 1. WODA (Zużywamy zasoby gleby)
             if (state.SoilMoisture >= 5)
             {
                 state.SoilMoisture -= 5;
                 PoziomNawodnienia += 10;
-                if (PoziomNawodnienia > 100) PoziomNawodnienia = 100;
+                if (PoziomNawodnienia > 100)
+                {
+                    PoziomNawodnienia = 100;
+                }
             }
             else
             {
@@ -90,7 +100,10 @@ namespace _01_agro.Core
             if (state.LightLevel >= 10)
             {
                 PoziomNaslonecznienia += 10;
-                if (PoziomNaslonecznienia > 100) PoziomNaslonecznienia = 100;
+                if (PoziomNaslonecznienia > 100)
+                {
+                    PoziomNaslonecznienia = 100;
+                }
             }
             else
             {
@@ -120,17 +133,21 @@ namespace _01_agro.Core
 
         public object Clone()
         {
-            var clone = (Rosliny)this.MemberwiseClone();
+            var clone = (Rosliny)MemberwiseClone();
             clone.Id = Guid.NewGuid();
-            clone.Nazwa = $"{this.Nazwa} (Szczepka)";
+            clone.Nazwa = $"{Nazwa} (Szczepka)";
             clone.PoziomWzrostu = 0; // Resetujemy wzrost dla nowej sadzonki
             return clone;
         }
 
         public int CompareTo(Rosliny? other)
         {
-            if (other == null) return 1;
-            return this.PoziomNawodnienia.CompareTo(other.PoziomNawodnienia);
+            if (other == null)
+            {
+                return 1;
+            }
+
+            return PoziomNawodnienia.CompareTo(other.PoziomNawodnienia);
         }
     }
 }

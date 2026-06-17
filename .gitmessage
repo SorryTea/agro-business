@@ -1,0 +1,21 @@
+# <type>(<scope>): <subject>   — ≤50 characters, imperative mood, no period
+#
+# <body>  — what and why, not how. Blank line above. Wrap at ~72 characters.
+#
+# <footer> — BREAKING CHANGE: ...   |   Refs #123
+#
+# ── Types ───────────────────────────────────────────────
+#   feat      new functionality
+#   fix       bug fix
+#   refactor  code change without behavior change
+#   test      add/improve tests
+#   docs      documentation only
+#   chore     maintenance, dependencies, small tasks
+#   ci        CI configuration
+#   perf      performance
+#   style     formatting/whitespace, no logic
+#
+# ── Scopes (layers) ─────────────────────────────────────
+#   core  data  logic  gui  console  ci
+#
+# Example:  fix(data): keep save file when load fails

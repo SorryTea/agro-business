@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using _03_agro.Logic;
 using _01_agro.Core;
 using _01_agro.Core.Economy;
+using _03_agro.Logic;
 
 namespace _04_agro.GUI
 {
@@ -60,6 +60,7 @@ namespace _04_agro.GUI
             _cellButtons.Clear();
 
             for (int row = 0; row < Rows; row++)
+            {
                 for (int col = 0; col < Cols; col++)
                 {
                     var btn = new Button
@@ -77,11 +78,16 @@ namespace _04_agro.GUI
                     FarmGrid.Children.Add(btn);
                     _cellButtons[(row, col)] = btn;
                 }
+            }
         }
 
         private void FarmField_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button button) return;
+            if (sender is not Button button)
+            {
+                return;
+            }
+
             _selectedField = ((int, int))button.Tag;
 
             RefreshSelectionVisual();
@@ -94,7 +100,10 @@ namespace _04_agro.GUI
         {
             foreach (var child in FarmGrid.Children)
             {
-                if (child is not Button btn) continue;
+                if (child is not Button btn)
+                {
+                    continue;
+                }
 
                 btn.BorderBrush = NormalBorderBrush;
                 btn.BorderThickness = NormalBorderThickness;
@@ -122,7 +131,10 @@ namespace _04_agro.GUI
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
 
-            if (res != MessageBoxResult.Yes) return;
+            if (res != MessageBoxResult.Yes)
+            {
+                return;
+            }
 
             try
             {
@@ -130,7 +142,9 @@ namespace _04_agro.GUI
 
                 const string savePath = "savegame.json";
                 if (System.IO.File.Exists(savePath))
+                {
                     System.IO.File.Delete(savePath);
+                }
 
                 _selectedField = null;
                 RefreshSelectionVisual();
@@ -155,7 +169,7 @@ namespace _04_agro.GUI
         // =========================
         private void ManualTick_Click(object sender, RoutedEventArgs e)
         {
-            _engine.Tick();                 
+            _engine.Tick();
             RenderAll(_engine.State);
             LoadLogsFromEngine(force: false);
         }
@@ -193,15 +207,17 @@ namespace _04_agro.GUI
 
             string plantName = type.ToString();
 
-            if (!_engine.Market.TryBuyPlant(cost, plantName, out string msg)) 
+            if (!_engine.Market.TryBuyPlant(cost, plantName, out string msg))
             {
                 _engine.LoggerRepo.AddLog($"[GUI] Zakup nieudany: {msg}");
                 SystemSounds.Hand.Play();
                 return;
             }
 
-            if (!_engine.PlantAt(row, col, plantName)) 
+            if (!_engine.PlantAt(row, col, plantName))
+            {
                 return;
+            }
 
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -221,7 +237,7 @@ namespace _04_agro.GUI
 
             var (row, col) = _selectedField.Value;
 
-            if (_engine.Market.TrySellAt(row, col, out string msg)) 
+            if (_engine.Market.TrySellAt(row, col, out string msg))
             {
                 _engine.LoggerRepo.AddLog(msg);
                 SystemSounds.Asterisk.Play();
@@ -240,7 +256,11 @@ namespace _04_agro.GUI
         // =========================
         private int ReadQty()
         {
-            if (int.TryParse(QtyBox.Text, out var qty) && qty > 0) return qty;
+            if (int.TryParse(QtyBox.Text, out var qty) && qty > 0)
+            {
+                return qty;
+            }
+
             return 1;
         }
 
@@ -285,7 +305,7 @@ namespace _04_agro.GUI
         // =========================
         private void SellAll_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.SprzedajWszystko(); 
+            var msg = _engine.Market.SprzedajWszystko();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -310,16 +330,34 @@ namespace _04_agro.GUI
 
         private void CloneSelected_Click(object sender, RoutedEventArgs e)
         {
-            if (InventoryList.SelectedItem is not InventoryItem inv) return;
+            if (InventoryList.SelectedItem is not InventoryItem inv)
+            {
+                return;
+            }
 
-            Rosliny? cloned = inv.Source.Clone() as Rosliny; 
-            if (cloned == null) return;
+            Rosliny? cloned = inv.Source.Clone() as Rosliny;
+            if (cloned == null)
+            {
+                return;
+            }
 
             // klon dodajemy do odpowiedniej listy (bez dopisywania logiki silnika)
-            if (cloned is Tomato t) _engine.State.Tomatoes.Add(t);
-            else if (cloned is Apple a) _engine.State.Apples.Add(a);
-            else if (cloned is Rose r) _engine.State.Roses.Add(r);
-            else if (cloned is Cactus c) _engine.State.Cactile.Add(c);
+            if (cloned is Tomato t)
+            {
+                _engine.State.Tomatoes.Add(t);
+            }
+            else if (cloned is Apple a)
+            {
+                _engine.State.Apples.Add(a);
+            }
+            else if (cloned is Rose r)
+            {
+                _engine.State.Roses.Add(r);
+            }
+            else if (cloned is Cactus c)
+            {
+                _engine.State.Cactile.Add(c);
+            }
 
             _engine.LoggerRepo.AddLog("[GUI] Utworzono klon sadzonki (Clone).");
             SystemSounds.Asterisk.Play();
@@ -362,7 +400,7 @@ namespace _04_agro.GUI
         // =========================
         private void BuySprinkler_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupZraszacz(); 
+            var msg = _engine.Market.KupZraszacz();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -371,7 +409,7 @@ namespace _04_agro.GUI
 
         private void BuySolar_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupPanelSloneczny(); 
+            var msg = _engine.Market.KupPanelSloneczny();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -381,10 +419,14 @@ namespace _04_agro.GUI
         private void ApplySensorThreshold_Click(object sender, RoutedEventArgs e)
         {
             if (!double.TryParse(SensorThresholdBox.Text.Replace('.', ','), out var thr))
+            {
                 thr = 20.0;
+            }
 
             foreach (var s in _engine.State.Sensors)
+            {
                 s.CriticalThreshold = thr;
+            }
 
             _engine.LoggerRepo.AddLog($"[GUI] Ustawiono Sensor.CriticalThreshold = {thr}");
             RenderAll(_engine.State);
@@ -396,7 +438,10 @@ namespace _04_agro.GUI
         // =========================
         private void TaxCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_engine?.State?.Finance == null) return;
+            if (_engine?.State?.Finance == null)
+            {
+                return;
+            }
 
             var selected = (TaxCombo.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "NoTax";
             _engine.State.Finance.Tax = selected.StartsWith("FlatTax")
@@ -414,7 +459,7 @@ namespace _04_agro.GUI
                 var from = DateTimeOffset.Parse(ReportFromBox.Text.Trim());
                 var to = DateTimeOffset.Parse(ReportToBox.Text.Trim());
 
-                var rep = _engine.State.Finance.GetReport(from, to, "Raport z GUI"); 
+                var rep = _engine.State.Finance.GetReport(from, to, "Raport z GUI");
                 ReportText.Text =
                     $"{rep.Title}\n" +
                     $"Revenue: {rep.Revenue}\n" +
@@ -494,25 +539,37 @@ namespace _04_agro.GUI
         private void RenderGridFromEngine(FarmState state)
         {
             foreach (var btn in _cellButtons.Values)
+            {
                 btn.Background = BrushFromHex("#252526");
+            }
 
             foreach (var t in state.Tomatoes.Where(p => p.Row >= 0 && p.Col >= 0))
+            {
                 PaintCell(t.Row, t.Col, t.IsMature ? "#FFD600" : "#2E7D32");
+            }
 
             foreach (var r in state.Roses.Where(p => p.Row >= 0 && p.Col >= 0))
+            {
                 PaintCell(r.Row, r.Col, r.IsMature ? "#FFD600" : "#AD1457");
+            }
 
             foreach (var c in state.Cactile.Where(p => p.Row >= 0 && p.Col >= 0))
+            {
                 PaintCell(c.Row, c.Col, c.IsMature ? "#FFD600" : "#558B2F");
+            }
 
             foreach (var a in state.Apples.Where(p => p.Row >= 0 && p.Col >= 0))
+            {
                 PaintCell(a.Row, a.Col, a.IsMature ? "#FFD600" : "#1565C0");
+            }
         }
 
         private void PaintCell(int row, int col, string hex)
         {
             if (_cellButtons.TryGetValue((row, col), out var btn))
+            {
                 btn.Background = BrushFromHex(hex);
+            }
         }
 
         private void RenderInventory(FarmState state)
@@ -523,7 +580,9 @@ namespace _04_agro.GUI
             void AddInv(IEnumerable<Rosliny> list)
             {
                 foreach (var p in list.Where(x => x.Row < 0 && x.Col < 0))
+                {
                     items.Add(new InventoryItem(p));
+                }
             }
 
             AddInv(state.Tomatoes);
@@ -532,7 +591,9 @@ namespace _04_agro.GUI
             AddInv(state.Cactile);
 
             foreach (var it in items)
+            {
                 InventoryList.Items.Add(it);
+            }
 
             InventoryList.DisplayMemberPath = nameof(InventoryItem.View);
         }
@@ -541,11 +602,15 @@ namespace _04_agro.GUI
         {
             SprinklersList.Items.Clear();
             foreach (var s in state.Sprinklers)
+            {
                 SprinklersList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+            }
 
             SolarsList.Items.Clear();
             foreach (var s in state.Solars)
+            {
                 SolarsList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+            }
         }
 
         private void RenderTransactions(FarmState state)
@@ -567,26 +632,37 @@ namespace _04_agro.GUI
             var logs = _engine.LoggerRepo.GetLogs(400);
 
             if (!force && logs.Count <= _lastLogCount)
+            {
                 return;
+            }
 
             // DŹWIĘK: alarmy sensora / finanse
             if (_lastLogCount >= 0 && logs.Count > _lastLogCount)
             {
                 var newLines = logs.Skip(_lastLogCount).ToList();
                 if (newLines.Any(l => l.Contains("[agro.Core] Sensor:")))
+                {
                     SystemSounds.Exclamation.Play();
+                }
+
                 if (newLines.Any(l => l.Contains("[FINANSE]")))
+                {
                     SystemSounds.Beep.Play();
+                }
             }
 
             _lastLogCount = logs.Count;
 
             LogList.Items.Clear();
             foreach (var line in logs)
+            {
                 LogList.Items.Add(line);
+            }
 
             if (LogList.Items.Count > 0)
+            {
                 LogList.ScrollIntoView(LogList.Items[^1]);
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -600,8 +676,16 @@ namespace _04_agro.GUI
 
         private static double Clamp0_100(double v)
         {
-            if (v < 0) return 0;
-            if (v > 100) return 100;
+            if (v < 0)
+            {
+                return 0;
+            }
+
+            if (v > 100)
+            {
+                return 100;
+            }
+
             return v;
         }
 
