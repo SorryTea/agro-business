@@ -7,13 +7,13 @@ namespace _02_agro.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class _1 : IMigrationMetadata
+    public sealed partial class Transactions : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(_1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Transactions));
         
         string IMigrationMetadata.Id
         {
-            get { return "202601272312132_1"; }
+            get { return "202601221747018_Transactions"; }
         }
         
         string IMigrationMetadata.Source

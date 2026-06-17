@@ -42,6 +42,7 @@ namespace _01_agro.Core
 
         public decimal BalanceAmount { get; set; } = 1000m;
         public string BalanceCurrency { get; set; } = "PLN";
+        public virtual List<Transaction> Transactions { get; set; } = new List<Transaction>();
 
         // Konstruktor inicjalizujący listę (żeby uniknąć błędów null)
         public FarmState()

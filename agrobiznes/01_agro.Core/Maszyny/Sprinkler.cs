@@ -7,6 +7,9 @@ using _01_agro.Core.Economy;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Klasa Sprinkler dziedzicząca po klasie Device odpowiada za nawodnienie roślinek
+    /// </summary>
     public class Sprinkler: Device
     {
         public Sprinkler()

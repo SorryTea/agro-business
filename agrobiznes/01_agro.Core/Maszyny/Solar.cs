@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Klasa Solar jako klasa dziedzicząca po device, która będzie odpowiadała za nasłonecznienie roślinek
+    /// </summary>
     public class Solar : Device
     {
         public Solar()

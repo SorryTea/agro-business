@@ -8,6 +8,9 @@ using _01_agro.Core;
 
 namespace _02_agro.Data
 {
+    /// <summary>
+    /// Klasa ZapisGry pozawala na zapisywanie i wczytywanie symulacji z pliku JSON
+    /// </summary>
     public static class GameSaver
     {
         // Plik zapisu w folderze bin/Debug projektu

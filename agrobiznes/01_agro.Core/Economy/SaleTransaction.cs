@@ -20,6 +20,8 @@ namespace _01_agro.Core.Economy
         {
         }
 
+        public SaleTransaction() { }
+
         public override void Apply(Account account)
         {
             account.Credit(Amount);

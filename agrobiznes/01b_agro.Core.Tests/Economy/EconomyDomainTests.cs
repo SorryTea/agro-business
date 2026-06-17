@@ -24,6 +24,17 @@ public class MoneyTests
     {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Money(-1m, "PLN"));
     }
+
+    [TestMethod]
+    public void Money_Equals_Should_Work_For_Same_Value()
+    {
+        var a = new Money(10m, "PLN");
+        var b = new Money(10m, "PLN");
+
+        Assert.IsTrue(a.Equals(b));
+        Assert.IsTrue(a == b);
+    }
+
 }
 
 [TestClass]
@@ -108,6 +119,24 @@ public class TransactionTests
         Assert.AreEqual(85m, acc.Balance.Amount);
         Assert.AreEqual(TransactionType.Penalty, tx.Type);
     }
+
+    [TestMethod]
+    public void TransactionComparer_Should_Sort_By_Amount_Desc()
+    {
+        var list = new List<Transaction>
+        {
+            new SaleTransaction(new Money(10m, "PLN"), TransactionCategory.Sales, "a"),
+            new SaleTransaction(new Money(50m, "PLN"), TransactionCategory.Sales, "b"),
+            new SaleTransaction(new Money(20m, "PLN"), TransactionCategory.Sales, "c"),
+        };
+
+        list.Sort(new TransactionByAmountDescComparer());
+
+        Assert.AreEqual(50m, list[0].Amount.Amount);
+        Assert.AreEqual(20m, list[1].Amount.Amount);
+        Assert.AreEqual(10m, list[2].Amount.Amount);
+    }
+
 }
 
 [TestClass]

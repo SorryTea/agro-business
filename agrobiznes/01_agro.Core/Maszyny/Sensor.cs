@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Klasa Sensor, która również będzie odświeżana poprzez interfejs ITickable
+    /// </summary>
     public class Sensor : ITickable
     {
         [Key] // Klucz główny w bazie

@@ -8,6 +8,9 @@ using _01_agro.Core.Economy;
 
 namespace _03_agro.Logic
 {
+    /// <summary>
+    /// Klasa ta odpowiada za zmiany na rynku, transakcje: kupno, sprzedaż
+    /// </summary>
     public class Market
     {
         private readonly FarmState _state;

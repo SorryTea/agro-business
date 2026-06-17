@@ -8,6 +8,9 @@ using _01_agro.Core;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Roślina - Pomidor z atrybutami
+    /// </summary>
     public class Tomato : Rosliny, IPositioned
     {
         

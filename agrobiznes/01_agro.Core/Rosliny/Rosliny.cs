@@ -12,6 +12,10 @@ namespace _01_agro.Core
         Sukulent
     }
 
+    /// <summary>
+    /// Abstrakcyjna klasa Rośliny, która poprzez interfejsy jest odświeżana, klonowalna i porównywalna z inną rośliną
+    /// jej atrybuty zmieniaja się z każdym odświeżeniem w zależności od rodzaju rośliny (naslonecznienie, nawodnienie, wzrost)
+    /// </summary>
     
     public abstract class Rosliny : ITickable, ICloneable, IComparable<Rosliny>, IPositioned
     {

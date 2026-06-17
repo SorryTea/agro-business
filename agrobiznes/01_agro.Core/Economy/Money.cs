@@ -13,7 +13,7 @@ namespace _01_agro.Core.Economy
     /// Używany w całym module ekonomii (saldo, transakcje, raporty).
     /// </summary>
     [ComplexType]
-    public class Money
+    public class Money: IEquatable<Money>
     {
         [JsonInclude]
         public decimal Amount { get; set; }
@@ -36,5 +36,26 @@ namespace _01_agro.Core.Economy
         {
             return $"{Amount:0.00} {Currency}";
         }
+
+        // ===== IEquatable =====
+        public bool Equals(Money? other)
+        {
+            if (ReferenceEquals(other, null)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return Amount == other.Amount &&
+                   string.Equals(Currency, other.Currency, StringComparison.Ordinal);
+        }
+
+        public override bool Equals(object? obj) => Equals(obj as Money);
+
+        public override int GetHashCode()
+            => HashCode.Combine(Amount, Currency);
+
+        public static bool operator ==(Money? left, Money? right)
+            => Equals(left, right);
+
+        public static bool operator !=(Money? left, Money? right)
+            => !Equals(left, right);
     }
 }

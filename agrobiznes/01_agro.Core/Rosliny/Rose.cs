@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Roślina - róża z atrybutami
+    /// </summary>
     public class Rose : Rosliny, IPositioned
     {
         

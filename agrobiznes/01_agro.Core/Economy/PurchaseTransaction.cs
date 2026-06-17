@@ -24,5 +24,7 @@ namespace _01_agro.Core.Economy
         {
             account.Debit(Amount);
         }
+
+        public PurchaseTransaction() { }
     }
 }

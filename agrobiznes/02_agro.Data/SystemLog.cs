@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace _02_agro.Data
 {
     /// <summary>
-    /// Klasa tworząca strukturę wpisu
+    /// Klasa WpisWSystemie tworzy szablon z atrybutów, który będzie zapisywany jako wpis
     /// </summary>
     public class SystemLog
     {

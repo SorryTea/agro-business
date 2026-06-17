@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core
 {
+    /// <summary>
+    /// Klasa abstrakcyjna Urządzenie, która poprzez interfejs ITickable będzie odświeżana
+    /// </summary>
     public abstract class Device : ITickable
     {
         [Key] // Klucz główny w bazie
