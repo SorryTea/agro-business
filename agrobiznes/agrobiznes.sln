@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03_agro.Logic", "03_agro.Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04_agro.GUI", "04_agro.GUI\04_agro.GUI.csproj", "{342C388B-017D-45D5-9288-47D3199259CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02b_agro.Data.Tests", "02b_agro.Data.Tests\02b_agro.Data.Tests.csproj", "{9BC71866-FE76-4168-AE23-3E92A9DD2D27}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01b_agro.Core.Tests", "01b_agro.Core.Tests\01b_agro.Core.Tests.csproj", "{B5955B38-27CC-4BB0-8C3B-3EC5C79DE460}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05_agro.Console", "05_agro.Console\05_agro.Console.csproj", "{B637FFDD-EE3C-4061-8945-DBAF99539239}"
@@ -39,10 +37,6 @@ Global
 		{342C388B-017D-45D5-9288-47D3199259CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{342C388B-017D-45D5-9288-47D3199259CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{342C388B-017D-45D5-9288-47D3199259CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BC71866-FE76-4168-AE23-3E92A9DD2D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BC71866-FE76-4168-AE23-3E92A9DD2D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BC71866-FE76-4168-AE23-3E92A9DD2D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BC71866-FE76-4168-AE23-3E92A9DD2D27}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5955B38-27CC-4BB0-8C3B-3EC5C79DE460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5955B38-27CC-4BB0-8C3B-3EC5C79DE460}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5955B38-27CC-4BB0-8C3B-3EC5C79DE460}.Release|Any CPU.ActiveCfg = Release|Any CPU
