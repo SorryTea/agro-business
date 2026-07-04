@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _01_agro.Core
 {
-    public enum TypRosliny
+    public enum PlantType
     {
-        Warzywo,
-        Owoc,
-        Kwiat,
-        Sukulent
+        Vegetable,
+        Fruit,
+        Flower,
+        Succulent
     }
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace _01_agro.Core
     /// jej atrybuty zmieniaja się z każdym odświeżeniem w zależności od rodzaju rośliny (naslonecznienie, nawodnienie, wzrost)
     /// </summary>
 
-    public abstract class Rosliny : ITickable, ICloneable, IComparable<Rosliny>, IPositioned
+    public abstract class Plant : ITickable, ICloneable, IComparable<Plant>, IPositioned
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -26,50 +26,50 @@ namespace _01_agro.Core
         [Required]
 
 
-        public string Nazwa { get; set; }
-        public TypRosliny Typ { get; set; }
+        public string Name { get; set; }
+        public PlantType Type { get; set; }
 
         public int Row { get; set; } = -1;
         public int Col { get; set; } = -1;
 
-        private float _cena;
-        public float Cena
+        private float _price;
+        public float Price
         {
-            get => _cena;
+            get => _price;
             set
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(Cena), "Cena nie może być ujemna.");
+                    throw new ArgumentOutOfRangeException(nameof(Price), "Cena nie może być ujemna.");
                 }
 
-                _cena = value;
+                _price = value;
             }
         }
 
-        public float CenaSprzedazy { get; set; }
+        public float SalePrice { get; set; }
 
 
-        public float PoziomWzrostu { get; set; } = 0;
-        public float PoziomNawodnienia { get; set; } = 20;
-        public float PoziomNaslonecznienia { get; set; } = 30;
+        public float GrowthLevel { get; set; } = 0;
+        public float MoistureLevel { get; set; } = 20;
+        public float SunlightLevel { get; set; } = 30;
 
         public bool IsDead { get; set; } = false;
 
         [NotMapped]
-        public bool IsMature => PoziomWzrostu >= 100;
+        public bool IsMature => GrowthLevel >= 100;
 
         // --- KONSTRUKTORY ---
 
 
-        protected Rosliny(string nazwa, TypRosliny typ)
+        protected Plant(string name, PlantType type)
         {
-            Nazwa = nazwa;
-            Typ = typ;
+            Name = name;
+            Type = type;
         }
 
         // Konstruktor dla Entity Framework (musi być pusty)
-        protected Rosliny() { }
+        protected Plant() { }
 
         // --- LOGIKA ---
 
@@ -84,34 +84,34 @@ namespace _01_agro.Core
             if (state.SoilMoisture >= 5)
             {
                 state.SoilMoisture -= 5;
-                PoziomNawodnienia += 10;
-                if (PoziomNawodnienia > 100)
+                MoistureLevel += 10;
+                if (MoistureLevel > 100)
                 {
-                    PoziomNawodnienia = 100;
+                    MoistureLevel = 100;
                 }
             }
             else
             {
-                PoziomNawodnienia -= 5;
+                MoistureLevel -= 5;
             }
 
             // 2. SŁOŃCE (Nie zużywamy zasobów globalnych, tylko z nich korzystamy!)
             // POPRAWKA: Usunąłem state.LightLevel -= 10;
             if (state.LightLevel >= 10)
             {
-                PoziomNaslonecznienia += 10;
-                if (PoziomNaslonecznienia > 100)
+                SunlightLevel += 10;
+                if (SunlightLevel > 100)
                 {
-                    PoziomNaslonecznienia = 100;
+                    SunlightLevel = 100;
                 }
             }
             else
             {
-                PoziomNaslonecznienia -= 10;
+                SunlightLevel -= 10;
             }
 
             // 3. ŻYCIE I ŚMIERĆ
-            if (PoziomNawodnienia <= 0 || PoziomNaslonecznienia <= 0)
+            if (MoistureLevel <= 0 || SunlightLevel <= 0)
             {
                 Die(state);
             }
@@ -124,7 +124,7 @@ namespace _01_agro.Core
         protected void Die(FarmState state)
         {
             IsDead = true;
-            Nazwa = "Uschnięty " + Nazwa; // Opcjonalnie: zmiana nazwy
+            Name = "Uschnięty " + Name; // Opcjonalnie: zmiana nazwy
         }
 
         protected abstract void DoSpecificGrowth();
@@ -133,21 +133,21 @@ namespace _01_agro.Core
 
         public object Clone()
         {
-            var clone = (Rosliny)MemberwiseClone();
+            var clone = (Plant)MemberwiseClone();
             clone.Id = Guid.NewGuid();
-            clone.Nazwa = $"{Nazwa} (Szczepka)";
-            clone.PoziomWzrostu = 0; // Resetujemy wzrost dla nowej sadzonki
+            clone.Name = $"{Name} (Szczepka)";
+            clone.GrowthLevel = 0; // Resetujemy wzrost dla nowej sadzonki
             return clone;
         }
 
-        public int CompareTo(Rosliny? other)
+        public int CompareTo(Plant? other)
         {
             if (other == null)
             {
                 return 1;
             }
 
-            return PoziomNawodnienia.CompareTo(other.PoziomNawodnienia);
+            return MoistureLevel.CompareTo(other.MoistureLevel);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace _01_agro.Core
         public Sprinkler()
         {
             Name = "Zraszacz ogrodowy";
-            Cena = 1000;
+            Price = 1000;
         }
         public override void Tick(FarmState state)
         {

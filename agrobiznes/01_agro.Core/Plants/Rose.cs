@@ -9,19 +9,19 @@ namespace _01_agro.Core
     /// <summary>
     /// Roślina - róża z atrybutami
     /// </summary>
-    public class Rose : Rosliny, IPositioned
+    public class Rose : Plant, IPositioned
     {
 
-        public Rose() : base("Róża", TypRosliny.Kwiat)
+        public Rose() : base("Róża", PlantType.Flower)
         {
-            Cena = 100;
-            CenaSprzedazy = 123;
-            PoziomNawodnienia = 50;
-            PoziomNaslonecznienia = 50;
+            Price = 100;
+            SalePrice = 123;
+            MoistureLevel = 50;
+            SunlightLevel = 50;
         }
         protected override void DoSpecificGrowth()
         {
-            PoziomWzrostu += 10;
+            GrowthLevel += 10;
         }
     }
 }

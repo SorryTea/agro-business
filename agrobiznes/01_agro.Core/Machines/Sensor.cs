@@ -36,9 +36,9 @@ namespace _01_agro.Core
             if (WaterReading < CriticalThreshold)
             {
                 // Jest sucho -> Włączamy WSZYSTKIE zraszacze
-                foreach (var zraszacz in state.Sprinklers)
+                foreach (var sprinkler in state.Sprinklers)
                 {
-                    zraszacz.IsOn = true;
+                    sprinkler.IsOn = true;
                 }
 
                 // Logujemy alarm raz na jakiś czas (żeby nie spamować co sekundę)
@@ -50,17 +50,17 @@ namespace _01_agro.Core
             else
             {
                 // Jest mokro -> Wyłączamy zraszacze (oszczędzamy wodę/zasoby)
-                foreach (var zraszacz in state.Sprinklers)
+                foreach (var sprinkler in state.Sprinklers)
                 {
-                    zraszacz.IsOn = false;
+                    sprinkler.IsOn = false;
                 }
             }
             // 2b. ANALIZA I ALARM: UV
             if (UVReading < CriticalThreshold)
             {
-                foreach (var lampa in state.Solars)
+                foreach (var lamp in state.Solars)
                 {
-                    lampa.IsOn = true;
+                    lamp.IsOn = true;
                 }
 
                 if (state.CurrentTick % 5 == 0 && state.Solars.Count > 0)
@@ -70,9 +70,9 @@ namespace _01_agro.Core
             }
             else
             {
-                foreach (var lampa in state.Solars)
+                foreach (var lamp in state.Solars)
                 {
-                    lampa.IsOn = false;
+                    lamp.IsOn = false;
                 }
             }
         }

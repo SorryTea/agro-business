@@ -260,9 +260,9 @@ namespace _03_agro.Logic
                     {
                         var p = new Tomato
                         {
-                            PoziomNawodnienia = 60,
-                            PoziomNaslonecznienia = 60,
-                            PoziomWzrostu = 0
+                            MoistureLevel = 60,
+                            SunlightLevel = 60,
+                            GrowthLevel = 0
                         };
                         _state.Tomatoes.Add(p);
                     }

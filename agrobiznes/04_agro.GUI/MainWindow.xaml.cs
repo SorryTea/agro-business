@@ -266,7 +266,7 @@ namespace _04_agro.GUI
 
         private void BuyTomatoesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupPomidory(ReadQty());
+            var msg = _engine.Market.BuyTomatoes(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -275,7 +275,7 @@ namespace _04_agro.GUI
 
         private void BuyApplesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupJablka(ReadQty());
+            var msg = _engine.Market.BuyApples(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -284,7 +284,7 @@ namespace _04_agro.GUI
 
         private void BuyCactusesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupKaktusy(ReadQty());
+            var msg = _engine.Market.BuyCacti(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -293,7 +293,7 @@ namespace _04_agro.GUI
 
         private void BuyRosesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupRóże(ReadQty());
+            var msg = _engine.Market.BuyRoses(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -305,7 +305,7 @@ namespace _04_agro.GUI
         // =========================
         private void SellAll_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.SprzedajWszystko();
+            var msg = _engine.Market.SellAll();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -335,7 +335,7 @@ namespace _04_agro.GUI
                 return;
             }
 
-            Rosliny? cloned = inv.Source.Clone() as Rosliny;
+            Plant? cloned = inv.Source.Clone() as Plant;
             if (cloned == null)
             {
                 return;
@@ -389,7 +389,7 @@ namespace _04_agro.GUI
             inv.Source.Row = row;
             inv.Source.Col = col;
 
-            _engine.LoggerRepo.AddLog($"[GUI] Posadzono z magazynu na ({row},{col}): {inv.Source.Nazwa}");
+            _engine.LoggerRepo.AddLog($"[GUI] Posadzono z magazynu na ({row},{col}): {inv.Source.Name}");
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
             LoadLogsFromEngine(false);
@@ -400,7 +400,7 @@ namespace _04_agro.GUI
         // =========================
         private void BuySprinkler_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupZraszacz();
+            var msg = _engine.Market.BuySprinkler();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -409,7 +409,7 @@ namespace _04_agro.GUI
 
         private void BuySolar_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupPanelSloneczny();
+            var msg = _engine.Market.BuySolarPanel();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -523,14 +523,14 @@ namespace _04_agro.GUI
             SoilText.Text = $"SoilMoisture: {state.SoilMoisture:F1}";
             LightText.Text = $"LightLevel: {state.LightLevel:F1}";
 
-            var allPlants = state.Tomatoes.Cast<Rosliny>()
+            var allPlants = state.Tomatoes.Cast<Plant>()
                 .Concat(state.Roses)
                 .Concat(state.Cactile)
                 .Concat(state.Apples)
                 .ToList();
 
-            double avgWater = allPlants.Count > 0 ? allPlants.Average(p => p.PoziomNawodnienia) : 0;
-            double avgGrowth = allPlants.Count > 0 ? allPlants.Average(p => p.PoziomWzrostu) : 0;
+            double avgWater = allPlants.Count > 0 ? allPlants.Average(p => p.MoistureLevel) : 0;
+            double avgGrowth = allPlants.Count > 0 ? allPlants.Average(p => p.GrowthLevel) : 0;
 
             WaterBar.Value = Clamp0_100(avgWater);
             GrowthBar.Value = Clamp0_100(avgGrowth);
@@ -577,7 +577,7 @@ namespace _04_agro.GUI
             InventoryList.Items.Clear();
 
             var items = new List<InventoryItem>();
-            void AddInv(IEnumerable<Rosliny> list)
+            void AddInv(IEnumerable<Plant> list)
             {
                 foreach (var p in list.Where(x => x.Row < 0 && x.Col < 0))
                 {
@@ -603,13 +603,13 @@ namespace _04_agro.GUI
             SprinklersList.Items.Clear();
             foreach (var s in state.Sprinklers)
             {
-                SprinklersList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+                SprinklersList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Price}");
             }
 
             SolarsList.Items.Clear();
             foreach (var s in state.Solars)
             {
-                SolarsList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+                SolarsList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Price}");
             }
         }
 
@@ -691,10 +691,10 @@ namespace _04_agro.GUI
 
         private sealed class InventoryItem
         {
-            public Rosliny Source { get; }
-            public string View => $"{Source.Nazwa} | Wzrost={Source.PoziomWzrostu:0}% | Woda={Source.PoziomNawodnienia:0}% | UV={Source.PoziomNaslonecznienia:0}%";
+            public Plant Source { get; }
+            public string View => $"{Source.Name} | Wzrost={Source.GrowthLevel:0}% | Woda={Source.MoistureLevel:0}% | UV={Source.SunlightLevel:0}%";
 
-            public InventoryItem(Rosliny src) => Source = src;
+            public InventoryItem(Plant src) => Source = src;
         }
     }
 }

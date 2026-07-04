@@ -9,20 +9,20 @@ namespace _01_agro.Core
     /// <summary>
     /// Roślina - Jabłko z atrybutami
     /// </summary>
-    public class Apple : Rosliny, IPositioned
+    public class Apple : Plant, IPositioned
     {
 
-        public Apple() : base("Jabłoń", TypRosliny.Owoc)
+        public Apple() : base("Jabłoń", PlantType.Fruit)
         {
-            Cena = 10;
-            CenaSprzedazy = 15;
-            PoziomNawodnienia = 50;
-            PoziomNaslonecznienia = 50;
+            Price = 10;
+            SalePrice = 15;
+            MoistureLevel = 50;
+            SunlightLevel = 50;
         }
 
         protected override void DoSpecificGrowth()
         {
-            PoziomWzrostu += 1;
+            GrowthLevel += 1;
         }
     }
 }

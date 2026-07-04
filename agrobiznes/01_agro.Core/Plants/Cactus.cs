@@ -9,19 +9,19 @@ namespace _01_agro.Core
     /// <summary>
     /// Roślina - kaktus z atrybutami
     /// </summary>
-    public class Cactus : Rosliny, IPositioned
+    public class Cactus : Plant, IPositioned
     {
 
-        public Cactus() : base("Kaktus", TypRosliny.Sukulent)
+        public Cactus() : base("Kaktus", PlantType.Succulent)
         {
-            Cena = 20;
-            CenaSprzedazy = 40;
-            PoziomNawodnienia = 50;
-            PoziomNaslonecznienia = 50;
+            Price = 20;
+            SalePrice = 40;
+            MoistureLevel = 50;
+            SunlightLevel = 50;
         }
         protected override void DoSpecificGrowth()
         {
-            PoziomWzrostu += 5;
+            GrowthLevel += 5;
         }
     }
 }
