@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace _01_agro.Core.Economy
 {
     /// <summary>
-    /// Główny silnik modułu ekonomii.
-    /// Zarządza transakcjami i saldem.
+    /// Core of the economy module: manages transactions and the account balance.
     /// </summary>
 
     public class FinanceEngine
@@ -27,7 +26,7 @@ namespace _01_agro.Core.Economy
         }
 
         /// <summary>
-        /// Stosuje transakcję: modyfikuje saldo i dodaje transakcję do historii.
+        /// Applies a transaction: updates the balance and records it in history.
         /// </summary>
         public void Apply(Transaction transaction)
         {
@@ -41,7 +40,7 @@ namespace _01_agro.Core.Economy
         }
 
         /// <summary>
-        /// Generuje raport finansowy dla okresu.
+        /// Generates a financial report for the given period.
         /// </summary>
         public FinancialReport GetReport(DateTimeOffset from, DateTimeOffset to, string? title = null)
         {
@@ -54,7 +53,7 @@ namespace _01_agro.Core.Economy
                 .Where(t => t.OccurredAt >= from && t.OccurredAt <= to)
                 .ToList();
 
-            // Jeśli brak transakcji, przyjmujemy PLN.
+            // If there are no transactions, default to PLN.
             var currency = scope.FirstOrDefault()?.Amount.Currency ?? "PLN";
 
             decimal revenue = scope
@@ -68,7 +67,7 @@ namespace _01_agro.Core.Economy
             var revenueMoney = new Money(revenue, currency);
             var costsMoney = new Money(costs, currency);
 
-            // Profit liczony jako max(0, revenue - costs) — prosto na potrzeby podatku i raportu.
+            // Profit is max(0, revenue - costs) — kept simple for tax and reporting.
             var profitValue = revenue - costs;
             var profitMoney = new Money(Math.Max(0m, profitValue), currency);
 

@@ -8,9 +8,6 @@ using _02_agro.Data;
 
 namespace _03_agro.Logic
 {
-    /// <summary>
-    /// Klasa SilnikSymulacji odpowiada za działanie środowiska symulacji
-    /// </summary>
     public class SimulationEngine
     {
         private FarmState _state;
@@ -30,9 +27,6 @@ namespace _03_agro.Logic
 
         private bool _tickInProgress = false;
 
-        // =========================
-        // Finance
-        // =========================
         private void EnsureFinanceInitialized()
         {
             if (_state.Finance == null)
@@ -84,9 +78,6 @@ namespace _03_agro.Logic
             );
         }
 
-        // =========================
-        //  KONSTRUKTOR
-        // =========================
         public SimulationEngine()
         {
             _logger = new LogRepo();
@@ -105,24 +96,19 @@ namespace _03_agro.Logic
 
             EnsureFinanceInitialized();
 
-            // Podpięcie loggera (żeby Core mógł logować)
+            // Wire the logger so the Core layer can emit log messages.
             _state.Logger = (message) => _logger.AddLog(message);
 
-            // Market inicjalizujemy raz
             Market = new Market(_state, _logger);
 
-            // Startowy pakiet farmy (tylko jeśli pusto)
             InitializeStarterFarm();
 
-            // Timer: tworzymy, ale odpalamy dopiero w StartSimulation()
+            // Create the timer here, but don't start it until StartSimulation().
             _gameTimer = new System.Timers.Timer(1000);
             _gameTimer.Elapsed += OnTimedEvent;
             _gameTimer.AutoReset = true;
         }
 
-        // =========================
-        //  START / STOP
-        // =========================
         public void StartSimulation()
         {
             if (_gameTimer == null)
@@ -148,7 +134,7 @@ namespace _03_agro.Logic
                     _gameTimer = null;
                 }
             }
-            catch { /* ignorujemy */ }
+            catch { /* ignore */ }
 
             _logger.AddLog("SYMULACJA: Zatrzymano.");
 
@@ -158,12 +144,9 @@ namespace _03_agro.Logic
             }
         }
 
-        // =========================
-        //  TIMER CALLBACK
-        // =========================
         private void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
-            // ochrona przed nakładaniem ticków
+            // Guard against overlapping ticks.
             lock (_sync)
             {
                 if (_tickInProgress)
@@ -178,7 +161,6 @@ namespace _03_agro.Logic
 
             try
             {
-                // cały Tick + modyfikacje stanu w locku
                 lock (_sync)
                 {
                     Tick_Internal_NoEvent();
@@ -193,9 +175,6 @@ namespace _03_agro.Logic
             TickHappened?.Invoke(snapshot);
         }
 
-        // =========================
-        //  Rejestracja obiektów
-        // =========================
         public void RegisterObject(ITickable obj)
         {
             lock (_sync)
@@ -238,9 +217,6 @@ namespace _03_agro.Logic
             }
         }
 
-        // =========================
-        //  Pakiet startowy
-        // =========================
         public void InitializeStarterFarm()
         {
             lock (_sync)
@@ -284,9 +260,6 @@ namespace _03_agro.Logic
             }
         }
 
-        // =========================
-        //  Tick publiczny (jeśli kiedyś chcesz ręczne ticki)
-        // =========================
         public void Tick()
         {
             lock (_sync)
@@ -296,14 +269,10 @@ namespace _03_agro.Logic
 
         }
 
-        // =========================
-        //  GŁÓWNY TICK (bez eventu)
-        // =========================
         private void Tick_Internal_NoEvent()
         {
             _state.CurrentTick++;
 
-            // gleba + UV
             _state.SoilMoisture -= 0.1 * (_state.Tomatoes.Count + _state.Roses.Count + _state.Apples.Count);
             if (_state.SoilMoisture < 0)
             {
@@ -316,7 +285,6 @@ namespace _03_agro.Logic
                 _state.LightLevel = 0;
             }
 
-            // zbieramy wszystko do jednej listy
             var allObjects = new List<ITickable>();
             allObjects.AddRange(_state.Sprinklers);
             allObjects.AddRange(_state.Solars);
@@ -340,11 +308,9 @@ namespace _03_agro.Logic
                 }
             }
 
-            // aktualizacja salda w FarmState
             _state.BalanceAmount = _state.Finance.Account.Balance.Amount;
             _state.BalanceCurrency = _state.Finance.Account.Balance.Currency;
 
-            // autosave co 10 tur
             if (_state.CurrentTick % 10 == 0)
             {
                 try
@@ -357,16 +323,12 @@ namespace _03_agro.Logic
                 }
             }
 
-            // sprzątanie martwych roślin
             _state.Tomatoes.RemoveAll(p => p.IsDead);
             _state.Cactile.RemoveAll(p => p.IsDead);
             _state.Roses.RemoveAll(p => p.IsDead);
             _state.Apples.RemoveAll(p => p.IsDead);
         }
 
-        // =========================
-        //  Sadzenie i sprawdzanie zajętości
-        // =========================
         public bool PlantAt(int row, int col, string plantType)
         {
             lock (_sync)

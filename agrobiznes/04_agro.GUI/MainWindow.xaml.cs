@@ -51,9 +51,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: true);
         }
 
-        // =========================
-        //  GRID
-        // =========================
         private void InitializeFarmGrid()
         {
             FarmGrid.Children.Clear();
@@ -120,9 +117,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  NEW GAME
-        // =========================
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
             var res = MessageBox.Show(
@@ -164,9 +158,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  MANUAL TICK (uses SimulationEngine.Tick())
-        // =========================
         private void ManualTick_Click(object sender, RoutedEventArgs e)
         {
             _engine.Tick();
@@ -174,9 +165,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  BUY + PLANT (uses Market.TryBuyPlant + Engine.PlantAt/IsOccupied)
-        // =========================
         private void BuyTomato_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Tomato);
         private void BuyRose_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Rose);
         private void BuyCactus_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Cactus);
@@ -224,9 +212,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  SELL (uses Market.TrySellAt)
-        // =========================
         private void Sell_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedField == null)
@@ -251,9 +236,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  SHOP STOCK (uses Market.KupPomidory/Jablka/Kaktusy/Róże)
-        // =========================
         private int ReadQty()
         {
             if (int.TryParse(QtyBox.Text, out var qty) && qty > 0)
@@ -300,9 +282,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  SELL ALL (uses Market.SprzedajWszystko)
-        // =========================
         private void SellAll_Click(object sender, RoutedEventArgs e)
         {
             var msg = _engine.Market.SellAll();
@@ -312,12 +291,8 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  INVENTORY (uses Rosliny.Clone + CompareTo)
-        // =========================
         private void SortInventory_Click(object sender, RoutedEventArgs e)
         {
-            // CompareTo z Rosliny: sort po PoziomNawodnienia
             _engine.State.Tomatoes.Sort();
             _engine.State.Apples.Sort();
             _engine.State.Roses.Sort();
@@ -341,7 +316,6 @@ namespace _04_agro.GUI
                 return;
             }
 
-            // klon dodajemy do odpowiedniej listy (bez dopisywania logiki silnika)
             if (cloned is Tomato t)
             {
                 _engine.State.Tomatoes.Add(t);
@@ -385,7 +359,6 @@ namespace _04_agro.GUI
                 return;
             }
 
-            // Używamy istniejących właściwości IPositioned (Row/Col) – bez pisania metod w silniku
             inv.Source.Row = row;
             inv.Source.Col = col;
 
@@ -395,9 +368,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  DEVICES (uses Market.KupZraszacz / KupPanelSloneczny)
-        // =========================
         private void BuySprinkler_Click(object sender, RoutedEventArgs e)
         {
             var msg = _engine.Market.BuySprinkler();
@@ -433,9 +403,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  FINANCE: Tax + Report + Transactions
-        // =========================
         private void TaxCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_engine?.State?.Finance == null)
@@ -478,9 +445,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  ENGINE TICK -> UI
-        // =========================
         private void OnEngineTick(FarmState state)
         {
             Dispatcher.Invoke(() =>
@@ -636,7 +600,6 @@ namespace _04_agro.GUI
                 return;
             }
 
-            // DŹWIĘK: alarmy sensora / finanse
             if (_lastLogCount >= 0 && logs.Count > _lastLogCount)
             {
                 var newLines = logs.Skip(_lastLogCount).ToList();

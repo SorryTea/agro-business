@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core
 {
-    /// <summary>
-    /// Roślina - Jabłko z atrybutami
-    /// </summary>
     public class Apple : Plant, IPositioned
     {
 

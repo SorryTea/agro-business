@@ -9,7 +9,7 @@ using _02_agro.Data;
 namespace _03_agro.Logic
 {
     /// <summary>
-    /// Klasa ta odpowiada za zmiany na rynku, transakcje: kupno, sprzedaż
+    /// The in-game market: buying and selling of plants and machines.
     /// </summary>
     public class Market
     {
@@ -49,19 +49,12 @@ namespace _03_agro.Logic
             return TryPay(cost, TransactionCategory.Other, $"Zakup rośliny: {plantName}", out message);
         }
 
-
-        // ==========================================
-        // 1. KUPOWANIE (PROSTE)
-        // ==========================================
-
-
         public string BuyTomatoes(int quantity)
         {
-            // Tworzymy "prototyp", żeby sprawdzić aktualną cenę w tym sezonie
+            // Build a prototype to read the current in-season price.
             var prototype = new Tomato();
             float cost = prototype.Price * quantity;
 
-            // [MIEJSCE NA IF FINANSOWY] 
             if (!TryPay(cost, TransactionCategory.Seeds, $"Zakup: Pomidory x{quantity}", out var err))
             {
                 return err;
@@ -70,7 +63,6 @@ namespace _03_agro.Logic
 
             for (int i = 0; i < quantity; i++)
             {
-                // Tworzymy nową sztukę
                 var t = new Tomato();
                 _state.Tomatoes.Add(t);
             }
@@ -85,7 +77,6 @@ namespace _03_agro.Logic
             var prototype = new Apple();
             float cost = prototype.Price * quantity;
 
-            // [IF FINANSOWY] 
             if (!TryPay(cost, TransactionCategory.Seeds, $"Zakup: Jabłka x{quantity}", out var err))
             {
                 return err;
@@ -93,7 +84,6 @@ namespace _03_agro.Logic
 
             for (int i = 0; i < quantity; i++)
             {
-                // Tworzymy nową sztukę
                 var t = new Apple();
 
                 _state.Apples.Add(t);
@@ -108,7 +98,6 @@ namespace _03_agro.Logic
             var prototype = new Cactus();
             float cost = prototype.Price * quantity;
 
-            // [IF FINANSOWY] 
             if (!TryPay(cost, TransactionCategory.Seeds, $"Zakup: Kaktusy x{quantity}", out var err))
             {
                 return err;
@@ -116,7 +105,6 @@ namespace _03_agro.Logic
 
             for (int i = 0; i < quantity; i++)
             {
-                // Tworzymy nową sztukę
                 var t = new Cactus();
 
                 _state.Cactile.Add(t);
@@ -131,7 +119,6 @@ namespace _03_agro.Logic
             var prototype = new Rose();
             float cost = prototype.Price * quantity;
 
-            // [IF FINANSOWY] 
             if (!TryPay(cost, TransactionCategory.Seeds, $"Zakup: Róży x{quantity}", out var err))
             {
                 return err;
@@ -139,7 +126,6 @@ namespace _03_agro.Logic
 
             for (int i = 0; i < quantity; i++)
             {
-                // Tworzymy nową sztukę
                 var t = new Rose();
 
                 _state.Roses.Add(t);
@@ -148,10 +134,6 @@ namespace _03_agro.Logic
             _logger.AddLog(msg);
             return msg;
         }
-
-        // ==========================================
-        // 2. SPRZEDAŻ (BARDZO PROSTA)
-        // ==========================================
 
         public string SellAll()
         {
@@ -178,7 +160,6 @@ namespace _03_agro.Logic
 
             if (totalCount > 0)
             {
-                // --- WPŁATA NA KONTO ---
                 var revenueMoney = new Money((decimal)totalEarnings, "PLN");
                 _state.Finance.Apply(new SaleTransaction(
                     revenueMoney,
@@ -195,7 +176,6 @@ namespace _03_agro.Logic
         }
         public bool TrySellAt(int row, int col, out string message)
         {
-            // 1) Szukamy rośliny na pozycji (row,col) w konkretnych listach
             Tomato tomato = _state.Tomatoes.FirstOrDefault(p => p.Row == row && p.Col == col);
             if (tomato != null)
             {
@@ -227,20 +207,16 @@ namespace _03_agro.Logic
         private bool SellSpecific<T>(List<T> list, T plant, int row, int col, out string message)
             where T : Plant
         {
-            // 2) (Opcjonalnie) sprzedajemy tylko dojrzałe i nie martwe
             if (!plant.IsMature || plant.IsDead)
             {
                 message = $"SKUP: Roślina na ({row},{col}) nie jest gotowa do sprzedaży.";
                 return false;
             }
 
-            // 3) Zarobek
             float income = plant.SalePrice;
 
-            // 4) Usuwamy z listy
             list.Remove(plant);
 
-            // 5) Wpłata na konto
             var revenueMoney = new Money((decimal)income, "PLN");
             _state.Finance.Apply(new SaleTransaction(
                 revenueMoney,
@@ -253,16 +229,8 @@ namespace _03_agro.Logic
             return true;
         }
 
-
-
-        // ==========================================
-        // 3. SILNIK SPRZEDAŻY (GENERYCZNY)
-        // ==========================================
-
-        // Ta metoda przyjmuje dowolną listę roślin (T : Roslina)
         private (int count, float earnings) SellFromList<T>(List<T> plantList) where T : Plant
         {
-            // 1. Wybierz te do sprzedania
             var toSell = plantList.Where(r => r.IsMature && !r.IsDead).ToList();
 
             if (toSell.Count == 0)
@@ -270,19 +238,12 @@ namespace _03_agro.Logic
                 return (0, 0);
             }
 
-            // 2. Policz zysk (Suma cen sprzedaży konkretnych obiektów)
-            // Dzięki temu, że cena jest w roślinie, to działa automatycznie!
             float profit = toSell.Sum(r => r.SalePrice);
 
-            // 3. Usuń fizycznie z farmy
             plantList.RemoveAll(r => r.IsMature && !r.IsDead);
 
             return (toSell.Count, profit);
         }
-
-        // ==========================================
-        // 4. KUPOWANIE MASZYN
-        // ==========================================
 
         public string BuySprinkler()
         {
@@ -296,21 +257,15 @@ namespace _03_agro.Logic
             return BuyMachine(newMachine, _state.Solars);
         }
 
-        // --- POMOCNICZA METODA DLA MASZYN ---
-
         private string BuyMachine<T>(T machine, List<T> targetList) where T : Device
         {
             float cost = machine.Price;
 
-
-            // 1. Walidacja finansowa (Zostawiam miejsce) + 2. Pobranie pieniędzy
             if (!TryPay(cost, TransactionCategory.Other, $"Zakup maszyny: {machine.Name}", out var err))
             {
                 return err;
             }
 
-
-            // 3. Dodanie do farmy
             targetList.Add(machine);
 
             string msg = $"SKLEP: Zakupiono maszynę: {machine.Name}. Koszt: {cost:C}";

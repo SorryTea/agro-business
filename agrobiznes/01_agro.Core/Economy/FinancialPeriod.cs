@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace _01_agro.Core.Economy
 {
     /// <summary>
-    /// Dane finansowe zagregowane dla określonego okresu czasu.
-    /// Wykorzystywane do podatków i raportów.
+    /// Financial data aggregated over a period; the input for tax and report calculations.
     /// </summary>
 
     public class FinancialPeriod

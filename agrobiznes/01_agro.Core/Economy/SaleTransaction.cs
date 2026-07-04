@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
 {
-    /// <summary>
-    /// Transakcja typu sprzedaż (przychód).
-    /// Zwiększa saldo konta.
-    /// </summary>
-
     public sealed class SaleTransaction : Transaction
     {
         public override TransactionType Type => TransactionType.Sale;

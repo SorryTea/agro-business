@@ -4,8 +4,7 @@ using System.Text.Json.Serialization;
 namespace _01_agro.Core.Economy
 {
     /// <summary>
-    /// Konto finansowe systemu.
-    /// Przechowuje aktualne saldo farmy.
+    /// Financial account. Holds the farm's current balance.
     /// </summary>
 
     public class Account
@@ -22,8 +21,7 @@ namespace _01_agro.Core.Economy
             Balance = initialBalance;
         }
 
-        // Pusty konstruktor prywatny.
-        // Jest niezbędny dla Entity Framework (baza) i pomaga przy deserializacji.
+        // required for System.Text.Json deserialization
         public Account()
         {
             Balance = new Money(0);

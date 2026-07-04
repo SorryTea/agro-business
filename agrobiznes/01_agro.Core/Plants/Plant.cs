@@ -13,8 +13,8 @@ namespace _01_agro.Core
     }
 
     /// <summary>
-    /// Abstrakcyjna klasa Rośliny, która poprzez interfejsy jest odświeżana, klonowalna i porównywalna z inną rośliną
-    /// jej atrybuty zmieniaja się z każdym odświeżeniem w zależności od rodzaju rośliny (naslonecznienie, nawodnienie, wzrost)
+    /// Base plant: each tick its moisture, sunlight and growth update, with the growth
+    /// rate defined by each concrete plant type.
     /// </summary>
 
     public abstract class Plant : ITickable, ICloneable, IComparable<Plant>, IPositioned
@@ -59,19 +59,13 @@ namespace _01_agro.Core
         [NotMapped]
         public bool IsMature => GrowthLevel >= 100;
 
-        // --- KONSTRUKTORY ---
-
-
         protected Plant(string name, PlantType type)
         {
             Name = name;
             Type = type;
         }
 
-        // Konstruktor dla Entity Framework (musi być pusty)
         protected Plant() { }
-
-        // --- LOGIKA ---
 
         public virtual void Tick(FarmState state)
         {
@@ -80,7 +74,7 @@ namespace _01_agro.Core
                 return;
             }
 
-            // 1. WODA (Zużywamy zasoby gleby)
+            // Water: consumes the shared soil moisture.
             if (state.SoilMoisture >= 5)
             {
                 state.SoilMoisture -= 5;
@@ -95,8 +89,7 @@ namespace _01_agro.Core
                 MoistureLevel -= 5;
             }
 
-            // 2. SŁOŃCE (Nie zużywamy zasobów globalnych, tylko z nich korzystamy!)
-            // POPRAWKA: Usunąłem state.LightLevel -= 10;
+            // Sunlight: we don't consume the global resource, only draw from it.
             if (state.LightLevel >= 10)
             {
                 SunlightLevel += 10;
@@ -110,7 +103,6 @@ namespace _01_agro.Core
                 SunlightLevel -= 10;
             }
 
-            // 3. ŻYCIE I ŚMIERĆ
             if (MoistureLevel <= 0 || SunlightLevel <= 0)
             {
                 Die(state);
@@ -124,19 +116,17 @@ namespace _01_agro.Core
         protected void Die(FarmState state)
         {
             IsDead = true;
-            Name = "Uschnięty " + Name; // Opcjonalnie: zmiana nazwy
+            Name = "Uschnięty " + Name;
         }
 
         protected abstract void DoSpecificGrowth();
-
-        // --- INTERFEJSY ---
 
         public object Clone()
         {
             var clone = (Plant)MemberwiseClone();
             clone.Id = Guid.NewGuid();
             clone.Name = $"{Name} (Szczepka)";
-            clone.GrowthLevel = 0; // Resetujemy wzrost dla nowej sadzonki
+            clone.GrowthLevel = 0; // A clone is a fresh cutting, so growth starts at 0.
             return clone;
         }
 

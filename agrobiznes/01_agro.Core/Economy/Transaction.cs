@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace _01_agro.Core.Economy
 {
     /// <summary>
-    /// Kategoria biznesowa transakcji (do raportów).
+    /// Business category of a transaction (used for reports).
     /// </summary>
 
     public enum TransactionCategory
@@ -22,7 +22,7 @@ namespace _01_agro.Core.Economy
     }
 
     /// <summary>
-    /// Typ transakcji określający wpływ na saldo.
+    /// Transaction kind that determines how the balance is affected.
     /// </summary>
 
     public enum TransactionType
@@ -31,10 +31,6 @@ namespace _01_agro.Core.Economy
         Sale,
         Penalty
     }
-
-    /// <summary>
-    /// Abstrakcyjna klasa bazowa dla wszystkich transakcji finansowych.
-    /// </summary>
 
     public abstract class Transaction
     {
@@ -65,7 +61,7 @@ namespace _01_agro.Core.Economy
     }
 
     /// <summary>
-    /// Porównuje transakcje po dacie (najpierw najnowsze).
+    /// Orders transactions by date, newest first.
     /// </summary>
     public sealed class TransactionByDateDescComparer : IComparer<Transaction>
     {
@@ -86,12 +82,12 @@ namespace _01_agro.Core.Economy
                 return -1;
             }
 
-            return y.OccurredAt.CompareTo(x.OccurredAt); // DESC
+            return y.OccurredAt.CompareTo(x.OccurredAt);
         }
     }
 
     /// <summary>
-    /// Porównuje transakcje po kwocie (największe najpierw).
+    /// Orders transactions by amount, largest first.
     /// </summary>
     public sealed class TransactionByAmountDescComparer : IComparer<Transaction>
     {
@@ -112,13 +108,13 @@ namespace _01_agro.Core.Economy
                 return -1;
             }
 
-            // Jeśli waluty różne, to nie porównujemy "na pałę"
+            // Different currencies can't be compared directly, so order by currency code.
             if (!string.Equals(x.Amount.Currency, y.Amount.Currency, StringComparison.Ordinal))
             {
                 return string.Compare(x.Amount.Currency, y.Amount.Currency, StringComparison.Ordinal);
             }
 
-            return y.Amount.Amount.CompareTo(x.Amount.Amount); // DESC
+            return y.Amount.Amount.CompareTo(x.Amount.Amount);
         }
     }
 }
