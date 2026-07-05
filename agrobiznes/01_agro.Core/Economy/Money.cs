@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace _01_agro.Core.Economy
 {
     /// <summary>
-    /// Obiekt wartości reprezentujący kwotę pieniężną.
-    /// Używany w całym module ekonomii (saldo, transakcje, raporty).
+    /// Value object representing a monetary amount, used throughout the economy module.
     /// </summary>
     [ComplexType]
     public class Money : IEquatable<Money>
@@ -40,7 +39,6 @@ namespace _01_agro.Core.Economy
             return $"{Amount:0.00} {Currency}";
         }
 
-        // ===== IEquatable =====
         public bool Equals(Money? other)
         {
             if (ReferenceEquals(other, null))

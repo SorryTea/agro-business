@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
 {
-    /// <summary>
-    /// Raport finansowy gotowy do wyświetlenia lub eksportu.
-    /// Zawiera podsumowanie wyników.
-    /// </summary>
-
     public class FinancialReport
     {
         public string Title { get; set; } = string.Empty;

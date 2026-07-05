@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
 {
-    /// <summary>
-    /// Transakcja typu kara lub koszt nadzwyczajny.
-    /// Zmniejsza saldo konta.
-    /// </summary>
-
     public sealed class PenaltyTransaction : Transaction
     {
         public override TransactionType Type => TransactionType.Penalty;

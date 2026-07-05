@@ -72,7 +72,6 @@
             <ColumnDefinition Width="2.3*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ====== FARM GRID ====== -->
         <Border Grid.Column="0" CornerRadius="10" Background="#252526" Padding="12" Margin="6">
             <Grid>
                 <Grid.RowDefinitions>
@@ -92,11 +91,9 @@
             </Grid>
         </Border>
 
-        <!-- ====== RIGHT PANEL: TABS ====== -->
         <Border Grid.Column="1" CornerRadius="10" Background="#252526" Padding="10" Margin="6">
             <TabControl Background="#252526" BorderBrush="#5A5A5A">
 
-                <!-- DASHBOARD -->
                 <TabItem Header="Panel">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="8">
@@ -134,7 +131,6 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <!-- SHOP / INVENTORY (uses KupPomidory/Jablka/Kaktusy/Róże + Clone + CompareTo) -->
                 <TabItem Header="Sklep i Magazyn">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="8">
@@ -168,7 +164,6 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <!-- DEVICES (uses KupZraszacz/KupPanelSloneczny + toggles + Sensor threshold) -->
                 <TabItem Header="Urządzenia">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="8">
@@ -196,7 +191,6 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <!-- FINANCE (Transactions + Report + Tax) -->
                 <TabItem Header="Finanse">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="8">
@@ -243,7 +237,6 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <!-- LOGS -->
                 <TabItem Header="Logi">
                     <Grid Margin="8">
                         <Grid.RowDefinitions>

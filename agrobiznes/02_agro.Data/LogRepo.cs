@@ -5,7 +5,7 @@ using System.Linq;
 namespace _02_agro.Data
 {
     /// <summary>
-    /// Klasa ta przechowuje powiadomienia/aktualizacje w pamięci
+    /// In-memory store for log and notification messages.
     /// </summary>
     public class LogRepo
     {

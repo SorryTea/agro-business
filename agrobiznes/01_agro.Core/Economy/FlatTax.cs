@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
 {
-    /// <summary>
-    /// Podatek liniowy.
-    /// </summary>
-
     public class FlatTax : ITax
     {
         public decimal Rate { get; }

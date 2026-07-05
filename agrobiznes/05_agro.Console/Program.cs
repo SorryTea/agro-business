@@ -6,7 +6,6 @@ class Program
     static void Main(string[] args)
     {
 
-        // Tworzymy i uruchamiamy silnik
         SimulationEngine engine = new SimulationEngine();
 
         Console.WriteLine("================================");
@@ -15,20 +14,17 @@ class Program
 
         Console.WriteLine($"Saldo start: {engine.State.Finance.Account.Balance}");
 
-        // 1) Kup pomidory
-        Console.WriteLine(engine.Market.KupPomidory(5));
+        Console.WriteLine(engine.Market.BuyTomatoes(5));
         Console.WriteLine($"Saldo po kupnie pomidorów: {engine.State.Finance.Account.Balance}");
 
-        // 2) Kup zraszacz
-        Console.WriteLine(engine.Market.KupZraszacz());
+        Console.WriteLine(engine.Market.BuySprinkler());
         Console.WriteLine($"Saldo po kupnie zraszacza: {engine.State.Finance.Account.Balance}");
 
-        // 3) Spróbuj kupić dużo (żeby zabrakło kasy)
-        Console.WriteLine(engine.Market.KupPomidory(9999));
+        // Deliberately overbuy so the purchase fails on insufficient funds.
+        Console.WriteLine(engine.Market.BuyTomatoes(9999));
         Console.WriteLine($"Saldo po próbie kupna 9999 pomidorów: {engine.State.Finance.Account.Balance}");
 
-        // 4) Sprzedaż wszystkiego
-        Console.WriteLine(engine.Market.SprzedajWszystko());
+        Console.WriteLine(engine.Market.SellAll());
         Console.WriteLine($"Saldo po sprzedaży: {engine.State.Finance.Account.Balance}");
 
         Console.WriteLine("================================");
@@ -37,10 +33,9 @@ class Program
 
         engine.StartSimulation();
 
-        // Blokujemy zamknięcie okna
+        // Keep the console open while the simulation runs.
         Console.ReadLine();
 
-        // Sprzątamy przy wyjściu
         engine.StopSimulation();
     }
 }

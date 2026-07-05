@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
 {
-    /// <summary>
-    /// Transakcja typu zakup (koszt).
-    /// Zmniejsza saldo konta.
-    /// </summary>
-
     public sealed class PurchaseTransaction : Transaction
     {
         public override TransactionType Type => TransactionType.Purchase;

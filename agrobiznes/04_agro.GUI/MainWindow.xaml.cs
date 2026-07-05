@@ -51,9 +51,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: true);
         }
 
-        // =========================
-        //  GRID
-        // =========================
         private void InitializeFarmGrid()
         {
             FarmGrid.Children.Clear();
@@ -120,9 +117,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  NEW GAME
-        // =========================
         private void NewGame_Click(object sender, RoutedEventArgs e)
         {
             var res = MessageBox.Show(
@@ -164,9 +158,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  MANUAL TICK (uses SimulationEngine.Tick())
-        // =========================
         private void ManualTick_Click(object sender, RoutedEventArgs e)
         {
             _engine.Tick();
@@ -174,9 +165,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  BUY + PLANT (uses Market.TryBuyPlant + Engine.PlantAt/IsOccupied)
-        // =========================
         private void BuyTomato_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Tomato);
         private void BuyRose_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Rose);
         private void BuyCactus_Click(object sender, RoutedEventArgs e) => BuySelectedField(PlantType.Cactus);
@@ -224,9 +212,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  SELL (uses Market.TrySellAt)
-        // =========================
         private void Sell_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedField == null)
@@ -251,9 +236,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(force: false);
         }
 
-        // =========================
-        //  SHOP STOCK (uses Market.KupPomidory/Jablka/Kaktusy/Róże)
-        // =========================
         private int ReadQty()
         {
             if (int.TryParse(QtyBox.Text, out var qty) && qty > 0)
@@ -266,7 +248,7 @@ namespace _04_agro.GUI
 
         private void BuyTomatoesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupPomidory(ReadQty());
+            var msg = _engine.Market.BuyTomatoes(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -275,7 +257,7 @@ namespace _04_agro.GUI
 
         private void BuyApplesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupJablka(ReadQty());
+            var msg = _engine.Market.BuyApples(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -284,7 +266,7 @@ namespace _04_agro.GUI
 
         private void BuyCactusesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupKaktusy(ReadQty());
+            var msg = _engine.Market.BuyCacti(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -293,31 +275,24 @@ namespace _04_agro.GUI
 
         private void BuyRosesStock_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupRóże(ReadQty());
+            var msg = _engine.Market.BuyRoses(ReadQty());
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  SELL ALL (uses Market.SprzedajWszystko)
-        // =========================
         private void SellAll_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.SprzedajWszystko();
+            var msg = _engine.Market.SellAll();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  INVENTORY (uses Rosliny.Clone + CompareTo)
-        // =========================
         private void SortInventory_Click(object sender, RoutedEventArgs e)
         {
-            // CompareTo z Rosliny: sort po PoziomNawodnienia
             _engine.State.Tomatoes.Sort();
             _engine.State.Apples.Sort();
             _engine.State.Roses.Sort();
@@ -335,13 +310,12 @@ namespace _04_agro.GUI
                 return;
             }
 
-            Rosliny? cloned = inv.Source.Clone() as Rosliny;
+            Plant? cloned = inv.Source.Clone() as Plant;
             if (cloned == null)
             {
                 return;
             }
 
-            // klon dodajemy do odpowiedniej listy (bez dopisywania logiki silnika)
             if (cloned is Tomato t)
             {
                 _engine.State.Tomatoes.Add(t);
@@ -385,22 +359,18 @@ namespace _04_agro.GUI
                 return;
             }
 
-            // Używamy istniejących właściwości IPositioned (Row/Col) – bez pisania metod w silniku
             inv.Source.Row = row;
             inv.Source.Col = col;
 
-            _engine.LoggerRepo.AddLog($"[GUI] Posadzono z magazynu na ({row},{col}): {inv.Source.Nazwa}");
+            _engine.LoggerRepo.AddLog($"[GUI] Posadzono z magazynu na ({row},{col}): {inv.Source.Name}");
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  DEVICES (uses Market.KupZraszacz / KupPanelSloneczny)
-        // =========================
         private void BuySprinkler_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupZraszacz();
+            var msg = _engine.Market.BuySprinkler();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -409,7 +379,7 @@ namespace _04_agro.GUI
 
         private void BuySolar_Click(object sender, RoutedEventArgs e)
         {
-            var msg = _engine.Market.KupPanelSloneczny();
+            var msg = _engine.Market.BuySolarPanel();
             _engine.LoggerRepo.AddLog(msg);
             SystemSounds.Asterisk.Play();
             RenderAll(_engine.State);
@@ -433,9 +403,6 @@ namespace _04_agro.GUI
             LoadLogsFromEngine(false);
         }
 
-        // =========================
-        //  FINANCE: Tax + Report + Transactions
-        // =========================
         private void TaxCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_engine?.State?.Finance == null)
@@ -478,9 +445,6 @@ namespace _04_agro.GUI
             }
         }
 
-        // =========================
-        //  ENGINE TICK -> UI
-        // =========================
         private void OnEngineTick(FarmState state)
         {
             Dispatcher.Invoke(() =>
@@ -523,14 +487,14 @@ namespace _04_agro.GUI
             SoilText.Text = $"SoilMoisture: {state.SoilMoisture:F1}";
             LightText.Text = $"LightLevel: {state.LightLevel:F1}";
 
-            var allPlants = state.Tomatoes.Cast<Rosliny>()
+            var allPlants = state.Tomatoes.Cast<Plant>()
                 .Concat(state.Roses)
                 .Concat(state.Cactile)
                 .Concat(state.Apples)
                 .ToList();
 
-            double avgWater = allPlants.Count > 0 ? allPlants.Average(p => p.PoziomNawodnienia) : 0;
-            double avgGrowth = allPlants.Count > 0 ? allPlants.Average(p => p.PoziomWzrostu) : 0;
+            double avgWater = allPlants.Count > 0 ? allPlants.Average(p => p.MoistureLevel) : 0;
+            double avgGrowth = allPlants.Count > 0 ? allPlants.Average(p => p.GrowthLevel) : 0;
 
             WaterBar.Value = Clamp0_100(avgWater);
             GrowthBar.Value = Clamp0_100(avgGrowth);
@@ -577,7 +541,7 @@ namespace _04_agro.GUI
             InventoryList.Items.Clear();
 
             var items = new List<InventoryItem>();
-            void AddInv(IEnumerable<Rosliny> list)
+            void AddInv(IEnumerable<Plant> list)
             {
                 foreach (var p in list.Where(x => x.Row < 0 && x.Col < 0))
                 {
@@ -603,13 +567,13 @@ namespace _04_agro.GUI
             SprinklersList.Items.Clear();
             foreach (var s in state.Sprinklers)
             {
-                SprinklersList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+                SprinklersList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Price}");
             }
 
             SolarsList.Items.Clear();
             foreach (var s in state.Solars)
             {
-                SolarsList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Cena}");
+                SolarsList.Items.Add($"{s.Name} | IsOn={s.IsOn} | Cena={s.Price}");
             }
         }
 
@@ -636,7 +600,6 @@ namespace _04_agro.GUI
                 return;
             }
 
-            // DŹWIĘK: alarmy sensora / finanse
             if (_lastLogCount >= 0 && logs.Count > _lastLogCount)
             {
                 var newLines = logs.Skip(_lastLogCount).ToList();
@@ -691,10 +654,10 @@ namespace _04_agro.GUI
 
         private sealed class InventoryItem
         {
-            public Rosliny Source { get; }
-            public string View => $"{Source.Nazwa} | Wzrost={Source.PoziomWzrostu:0}% | Woda={Source.PoziomNawodnienia:0}% | UV={Source.PoziomNaslonecznienia:0}%";
+            public Plant Source { get; }
+            public string View => $"{Source.Name} | Wzrost={Source.GrowthLevel:0}% | Woda={Source.MoistureLevel:0}% | UV={Source.SunlightLevel:0}%";
 
-            public InventoryItem(Rosliny src) => Source = src;
+            public InventoryItem(Plant src) => Source = src;
         }
     }
 }
