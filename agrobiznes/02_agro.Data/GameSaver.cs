@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using _01_agro.Core.Economy;
 using _01_agro.Core;
 
 namespace _02_agro.Data
@@ -32,6 +33,20 @@ namespace _02_agro.Data
             state.BalanceAmount = state.Finance.Account.Balance.Amount;
             state.BalanceCurrency = state.Finance.Account.Balance.Currency;
             state.Transactions = state.Finance.Transactions.ToList();
+        }
+
+        private static void RestoreFinanceSnapshot(FarmState state)
+        {
+            if (string.IsNullOrWhiteSpace(state.BalanceCurrency))
+            {
+                state.BalanceCurrency = "PLN";
+            }
+
+            state.Transactions ??= new List<Transaction>();
+            state.Finance = new FinanceEngine(
+                new Account(new Money(state.BalanceAmount, state.BalanceCurrency)),
+                new NoTax());
+            state.Finance.RestoreTransactions(state.Transactions);
         }
         public static void SaveGame(FarmState state)
         {
@@ -72,6 +87,10 @@ namespace _02_agro.Data
             {
                 string jsonString = File.ReadAllText(FilePath);
                 state = JsonSerializer.Deserialize<FarmState>(jsonString);
+                if (state != null)
+                {
+                    RestoreFinanceSnapshot(state);
+                }
                 return state != null ? LoadGameResult.Loaded : LoadGameResult.Failed;
             }
             catch (Exception ex)

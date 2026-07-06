@@ -39,6 +39,17 @@ namespace _01_agro.Core.Economy
             _transactions.Add(transaction);
         }
 
+        public void RestoreTransactions(IEnumerable<Transaction> transactions)
+        {
+            if (transactions is null)
+            {
+                throw new ArgumentNullException(nameof(transactions));
+            }
+
+            _transactions.Clear();
+            _transactions.AddRange(transactions);
+        }
+
         /// <summary>
         /// Generates a financial report for the given period.
         /// </summary>
