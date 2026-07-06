@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace _01_agro.Core.Economy
@@ -32,14 +33,24 @@ namespace _01_agro.Core.Economy
         Penalty
     }
 
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(PurchaseTransaction), "purchase")]
+    [JsonDerivedType(typeof(SaleTransaction), "sale")]
+    [JsonDerivedType(typeof(PenaltyTransaction), "penalty")]
     public abstract class Transaction
     {
         [Key]
+        [JsonInclude]
         public Guid Id { get; private set; }
+        [JsonInclude]
         public DateTimeOffset OccurredAt { get; private set; }
-        public Money Amount { get; private set; }
-        public string Description { get; }
+        [JsonInclude]
+        public Money Amount { get; private set; } = new Money(0m, "PLN");
+        [JsonInclude]
+        public string Description { get; private set; } = string.Empty;
+        [JsonInclude]
         public TransactionCategory Category { get; private set; }
+        [JsonIgnore]
         public abstract TransactionType Type { get; }
 
         protected Transaction(Money amount, TransactionCategory category, string description, DateTimeOffset? occurredAt = null)
