@@ -8,6 +8,13 @@ using _01_agro.Core;
 
 namespace _02_agro.Data
 {
+    public enum LoadGameResult
+    {
+        Loaded,
+        Missing,
+        Failed
+    }
+
     /// <summary>
     /// Saves and loads the simulation to and from a JSON file.
     /// </summary>
@@ -47,26 +54,25 @@ namespace _02_agro.Data
             }
         }
 
-        public static FarmState LoadGame()
+        public static LoadGameResult TryLoadGame(out FarmState? state)
         {
+            state = null;
+
             if (!File.Exists(FilePath))
             {
-                return null;
+                return LoadGameResult.Missing;
             }
             try
             {
                 string jsonString = File.ReadAllText(FilePath);
-
-                var state = JsonSerializer.Deserialize<FarmState>(jsonString);
-
-                return state;
+                state = JsonSerializer.Deserialize<FarmState>(jsonString);
+                return state != null ? LoadGameResult.Loaded : LoadGameResult.Failed;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[LOAD ERROR]: Failed to load save file. {ex.Message}");
-                return null;
+                return LoadGameResult.Failed;
             }
-
         }
     }
 }
