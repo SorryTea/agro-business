@@ -27,11 +27,17 @@ namespace _02_agro.Data
 
         private static readonly string FilePath = Path.Combine(SaveDirectory, "savegame.json");
 
-
-
+        private static void SyncFinanceSnapshot(FarmState state)
+        {
+            state.BalanceAmount = state.Finance.Account.Balance.Amount;
+            state.BalanceCurrency = state.Finance.Account.Balance.Currency;
+            state.Transactions = state.Finance.Transactions.ToList();
+        }
         public static void SaveGame(FarmState state)
         {
             Directory.CreateDirectory(SaveDirectory);
+
+            SyncFinanceSnapshot(state);
 
             var options = new JsonSerializerOptions
             {
