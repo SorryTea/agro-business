@@ -8,42 +8,71 @@ using _01_agro.Core;
 
 namespace _02_agro.Data
 {
+    public enum LoadGameResult
+    {
+        Loaded,
+        Missing,
+        Failed
+    }
+
     /// <summary>
     /// Saves and loads the simulation to and from a JSON file.
     /// </summary>
     public static class GameSaver
     {
-        private static readonly string FilePath = "savegame.json";
+        private static readonly string SaveDirectory =
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Agrobiznes");
+
+        private static readonly string FilePath = Path.Combine(SaveDirectory, "savegame.json");
+
+
 
         public static void SaveGame(FarmState state)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
+            Directory.CreateDirectory(SaveDirectory);
 
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
             string jsonString = JsonSerializer.Serialize(state, options);
-            File.WriteAllText(FilePath, jsonString);
+
+            string tempPath = FilePath + ".tmp";
+            string backupPath = FilePath + ".bak";
+
+            File.WriteAllText(tempPath, jsonString);
+
+            if (File.Exists(FilePath))
+            {
+                File.Replace(tempPath, FilePath, backupPath);
+            }
+            else
+            {
+                File.Move(tempPath, FilePath);
+            }
         }
 
-        public static FarmState LoadGame()
+        public static LoadGameResult TryLoadGame(out FarmState? state)
         {
+            state = null;
+
             if (!File.Exists(FilePath))
             {
-                return null;
+                return LoadGameResult.Missing;
             }
             try
             {
                 string jsonString = File.ReadAllText(FilePath);
-
-                var state = JsonSerializer.Deserialize<FarmState>(jsonString);
-
-                return state;
+                state = JsonSerializer.Deserialize<FarmState>(jsonString);
+                return state != null ? LoadGameResult.Loaded : LoadGameResult.Failed;
             }
             catch (Exception ex)
             {
-                File.Delete(FilePath);
-                System.Diagnostics.Debug.WriteLine($"[BŁĄD ZAPISU]: Nie udało się wczytać gry. {ex.Message}");
-                return null;
+                System.Diagnostics.Debug.WriteLine($"[LOAD ERROR]: Failed to load save file. {ex.Message}");
+                return LoadGameResult.Failed;
             }
-
         }
     }
 }

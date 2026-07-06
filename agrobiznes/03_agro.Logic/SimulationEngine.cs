@@ -82,16 +82,24 @@ namespace _03_agro.Logic
         {
             _logger = new LogRepo();
 
-            var loaded = GameSaver.LoadGame();
-            if (loaded == null)
+            var loadResult = GameSaver.TryLoadGame(out var loaded);
+
+            if (loadResult == LoadGameResult.Loaded && loaded != null)
             {
-                _state = new FarmState();
-                _logger.AddLog("Rozpoczęto nową grę.");
+                _state = loaded;
+                _logger.AddLog("[agro.Logic]: Game loaded successfully.");
             }
             else
             {
-                _state = loaded;
-                _logger.AddLog("Wczytano zapis gry.");
+                _state = new FarmState();
+                if (loadResult == LoadGameResult.Missing)
+                {
+                    _logger.AddLog("[agro.Logic]: No save file found. Starting a new game.");
+                }
+                else if (loadResult == LoadGameResult.Failed)
+                {
+                    _logger.AddLog("[agro.Logic]: Failed to load save file. Starting a new game.");
+                }
             }
 
             EnsureFinanceInitialized();
