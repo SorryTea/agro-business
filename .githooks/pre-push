@@ -1,0 +1,4 @@
+#!/bin/sh
+cd agrobiznes && dotnet format --verify-no-changes || {
+  echo "Run 'dotnet format' before pushing."; exit 1;
+}
