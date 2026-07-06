@@ -13,14 +13,38 @@ namespace _02_agro.Data
     /// </summary>
     public static class GameSaver
     {
-        private static readonly string FilePath = "savegame.json";
+        private static readonly string SaveDirectory =
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Agrobiznes");
+
+        private static readonly string FilePath = Path.Combine(SaveDirectory, "savegame.json");
+
+
 
         public static void SaveGame(FarmState state)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
+            Directory.CreateDirectory(SaveDirectory);
 
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
             string jsonString = JsonSerializer.Serialize(state, options);
-            File.WriteAllText(FilePath, jsonString);
+
+            string tempPath = FilePath + ".tmp";
+            string backupPath = FilePath + ".bak";
+
+            File.WriteAllText(tempPath, jsonString);
+
+            if (File.Exists(FilePath))
+            {
+                File.Replace(tempPath, FilePath, backupPath);
+            }
+            else
+            {
+                File.Move(tempPath, FilePath);
+            }
         }
 
         public static FarmState LoadGame()
