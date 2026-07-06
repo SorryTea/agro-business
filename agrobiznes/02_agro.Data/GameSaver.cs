@@ -39,8 +39,7 @@ namespace _02_agro.Data
             }
             catch (Exception ex)
             {
-                File.Delete(FilePath);
-                System.Diagnostics.Debug.WriteLine($"[BŁĄD ZAPISU]: Nie udało się wczytać gry. {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[LOAD ERROR]: Failed to load save file. {ex.Message}");
                 return null;
             }
 
