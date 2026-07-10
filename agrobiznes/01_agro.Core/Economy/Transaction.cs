@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -39,7 +38,6 @@ namespace _01_agro.Core.Economy
     [JsonDerivedType(typeof(PenaltyTransaction), "penalty")]
     public abstract class Transaction
     {
-        [Key]
         [JsonInclude]
         public Guid Id { get; private set; }
         [JsonInclude]

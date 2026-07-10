@@ -17,7 +17,6 @@ namespace _01_agro.Core
         public double LightLevel { get; set; } = 20.0;
 
 
-        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         // Not serialized: this is a delegate (code), not data.
         [JsonIgnore]
         public Action<string> Logger { get; set; }
@@ -32,7 +31,6 @@ namespace _01_agro.Core
         public List<Solar> Solars { get; set; } = new List<Solar>();
         public List<Sensor> Sensors { get; set; } = new List<Sensor>();
 
-        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         [JsonIgnore]
         public FinanceEngine Finance { get; set; }
 
