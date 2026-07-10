@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _01_agro.Core
 {
@@ -19,12 +17,7 @@ namespace _01_agro.Core
 
     public abstract class Plant : ITickable, ICloneable, IComparable<Plant>, IPositioned
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Required]
-
 
         public string Name { get; set; }
         public PlantType Type { get; set; }
@@ -56,7 +49,6 @@ namespace _01_agro.Core
 
         public bool IsDead { get; set; } = false;
 
-        [NotMapped]
         public bool IsMature => GrowthLevel >= 100;
 
         protected Plant(string name, PlantType type)

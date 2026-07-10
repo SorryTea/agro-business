@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -11,7 +10,6 @@ namespace _01_agro.Core.Economy
     /// <summary>
     /// Value object representing a monetary amount, used throughout the economy module.
     /// </summary>
-    [ComplexType]
     public class Money : IEquatable<Money>
     {
         [JsonInclude]
